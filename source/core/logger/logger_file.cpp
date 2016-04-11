@@ -14,7 +14,7 @@
 
 #define __PCORE_LOGGER_FILE_HELPER( __type, __msg ) \
 			m_TextStream <<  __type << ": " << QDateTime::currentDateTime().toString() << " | " << __msg.getMessage() << " | " ; \
-			for ( int i = 0; i < __msg.getParamCount(); i++ )\
+			for ( quint32 i = 0; i < __msg.getParamCount(); i++ )\
 			{\
 				auto it = __msg.getParamByIndex(i);\
 				m_TextStream << it.key() << ": '" << it.value().toString() << "', ";\

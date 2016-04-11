@@ -11,6 +11,7 @@
 #include "config.h"
 #include <QObject>
 #include <QString>
+#include <QVersionNumber>
 
 namespace PCore
 {
@@ -23,6 +24,7 @@ namespace PCore
 		//! default constructor
 		explicit Root( QObject* _parent = nullptr );
 
+
 		/*!
 		 * \brief initialize the core (Engine)
 		 * \param _setting_file: Setting file name and path
@@ -30,6 +32,20 @@ namespace PCore
 		 */
 		bool init( const QString& _setting_file
 								= PCORE_CONFIG_DEFAULT_SETTING_FILE );
+
+
+		/*!
+		 * \brief Returns version number of PCore.
+		 * \return Version number of PCore.
+		 */
+		QVersionNumber getVersionNumber( void ) const;
+
+
+		/*!
+		 * \brief Returns version of PCore in string.
+		 * \return Version of PCore in string.
+		 */
+		QString getVersionString( void ) const;
 	}; // Root
 } // PCore
 

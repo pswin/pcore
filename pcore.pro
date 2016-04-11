@@ -27,7 +27,8 @@ SOURCES += \
     source/core/hash/hash_sha1.cpp \
     source/core/logger/logger_file.cpp \
     source/core/logger/logger_qdebug.cpp \
-    source/core/hash.cpp
+    source/core/hash.cpp \
+    source/core/profiler.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -52,7 +53,8 @@ HEADERS +=\
     headers/core/hash/hash_crc32.h \
     headers/core/hash/hash_md5.h \
     headers/core/hash/hash_sha1.h \
-    include/pcore/core/hash.h
+    include/pcore/core/hash.h \
+    include/pcore/core/profiler.h
 
 unix {
     target.path = /usr/lib

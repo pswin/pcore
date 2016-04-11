@@ -21,12 +21,66 @@
 
 
 #define __PCORE_LOG_MESSAGE_HELPER( __msg, __type ) pLogger->log( \
-			PLogMessage( __msg, __FILE__, __FUNCTION__, __LINE__, __type ) );
-#define PCORE_LOG_CRITICAL( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Critical )
-#define PCORE_LOG_ERROR( __msg )  __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Error )
-#define PCORE_LOG_WARNING( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Warning )
-#define PCORE_LOG_INFO( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Information )
-#define PCORE_LOG_TRACE( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Trace )
+			PLogMessage( QString(__msg), PCORE_FILE_NAME , \
+					PCORE_FUNC_NAME, PCORE_LINE_NUMBER, __type ) );
+
+// critical
+#if ( (PCORE_CONFIG_LOG_CRITICAL_RELEASE == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+	( (PCORE_CONFIG_LOG_CRITICAL_DEBUG == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_TRUE )
+	#define PCORE_LOG_CRITICAL( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Critical )
+#else
+	#define PCORE_LOG_CRITICAL( __msg ) PCORE_NOOP( __msg )
+#endif
+
+// error
+#if ( (PCORE_CONFIG_LOG_ERROR_RELEASE == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+	( (PCORE_CONFIG_LOG_ERROR_DEBUG == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_TRUE )
+	#define PCORE_LOG_ERROR( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Error )
+#else
+	#define PCORE_LOG_ERROR( __msg ) PCORE_NOOP( __msg )
+#endif
+
+// warning
+#if ( (PCORE_CONFIG_LOG_WARNING_RELEASE == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+	( (PCORE_CONFIG_LOG_WARNING_DEBUG == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_TRUE )
+	#define PCORE_LOG_WARNING( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Warning )
+#else
+	#define PCORE_LOG_WARNING( __msg ) PCORE_NOOP( __msg )
+#endif
+
+// info
+#if ( (PCORE_CONFIG_LOG_INFO_RELEASE == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+	( (PCORE_CONFIG_LOG_INFO_DEBUG == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_TRUE )
+	#define PCORE_LOG_INFO( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Information )
+#else
+	#define PCORE_LOG_INFO( __msg ) PCORE_NOOP( __msg )
+#endif
+
+//! trace
+#if ( (PCORE_CONFIG_LOG_TRACE_RELEASE == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+	( (PCORE_CONFIG_LOG_TRACE_DEBUG == PCORE_ENABLE) \
+		&& PCORE_DEBUG_MODE == PCORE_TRUE )
+	#define PCORE_LOG_TRACE( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Trace )
+#else
+	#define PCORE_LOG_TRACE( __msg ) PCORE_NOOP( __msg )
+#endif
+
+//! trace function start
+#if PCORE_CONFIG_LOG_TRACE_FUNCTION_START == PCORE_ENABLE
+	#define PCORE_LOG_TRACE_FUNC_START( ) PCORE_LOG_TRACE( PCORE_FUNC_NAME+" called." );
+#else
+	#define PCORE_LOG_TRACE_FUNC_START() PCORE_NOOP("")
+#endif
+
 
 
 namespace PCore
@@ -236,6 +290,7 @@ namespace PCore
 
 			Q_PROPERTY( Type type READ getType )
 
+
 			//=====================================
 			// enums
 			//=====================================
@@ -251,7 +306,8 @@ namespace PCore
 				IODevice,	// Logs on an specified device.
 				Dummy,		// Ignores log messages.
 				QDebug,		// Uses qDebug for logging.
-				Custom,		// Custom logger type.
+				PBus,		// PBus based logging
+				Custom		// Custom logger type.
 			};
 			Q_ENUMS( Type )
 

@@ -24,11 +24,11 @@
 	// Version Information
 	//========================================
 	
-	#define PCORE_VERSION_MAJOR		0
+	#define PCORE_VERSION_MAJOR		1
 	#define PCORE_VERSION_MINOR		0
 	#define PCORE_VERSION_PATCH		0
 	#define PCORE_VERSION_SUFFIX	""
-	#define PCORE_VERSION_NAME		"beta test"
+	#define PCORE_VERSION_NAME		"1.0.0"
 
 	#define PCORE_VERSION	((PCORE_VERSION_MAJOR << 16) | \
 							(PCORE_VERSION_MINOR << 8) | PCORE_VERSION_PATCH)
@@ -63,8 +63,10 @@
 	#define PCORE_CHAR_STRING(__str) #__str
 
 	//! line number and file name
-	#define PCORE_LINE_NUMBER QString( PCORE_CHAR_STRING( __LINE__ ) )
+	#define PCORE_LINE_NUMBER  __LINE__
+	#define PCORE_LINE_NUMBER_STR  QString ( PCORE_CHAR_STRING( __LINE__ ) )
 	#define PCORE_FILE_NAME QString( __FILE__ )
+	#define PCORE_FUNC_NAME QString( __FUNCTION__ )
 
 	//! extern
 	#define PCORE_EXTERN( __type, __var ) extern "C" { PCORE_API extern __type __var; }
