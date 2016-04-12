@@ -93,4 +93,12 @@
 #define PCORE_CONFIG_LOG_TRACE_FUNCTION_START PCORE_DISABLE
 
 
+/*
+ *	This macros define network logger's default TCP-port and host address.
+ */
+#define PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_PORT	3306
+#define PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_HOST	QHostAddress::LocalHost
+#define PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_WAIT_TIME 30000 // 30 sec
+
+
 #endif // _PCORE_CONFIG_H

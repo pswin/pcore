@@ -28,7 +28,8 @@ SOURCES += \
     source/core/logger/logger_file.cpp \
     source/core/logger/logger_qdebug.cpp \
     source/core/hash.cpp \
-    source/core/profiler.cpp
+    source/core/profiler.cpp \
+    source/core/logger/logger_network.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -41,9 +42,6 @@ HEADERS +=\
     include/pcore/def/os.h \
     include/pcore/config.h \
     include/pcore/pcore_def.h \
-    headers/core/logger_dummy.h \
-    headers/core/logger_file.h \
-    headers/core/logger_qdebug.h \
     include/pcore/core/logger.h \
     include/pcore/globals.h \
     include/pcore/root.h \
@@ -54,7 +52,11 @@ HEADERS +=\
     headers/core/hash/hash_md5.h \
     headers/core/hash/hash_sha1.h \
     include/pcore/core/hash.h \
-    include/pcore/core/profiler.h
+    include/pcore/core/profiler.h \
+    headers/core/logger/logger_network.h \
+    headers/core/logger/logger_dummy.h \
+    headers/core/logger/logger_file.h \
+    headers/core/logger/logger_qdebug.h
 
 unix {
     target.path = /usr/lib

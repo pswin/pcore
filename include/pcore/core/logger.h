@@ -81,6 +81,15 @@
 	#define PCORE_LOG_TRACE_FUNC_START() PCORE_NOOP("")
 #endif
 
+/*!	This macro is for logging errors that acurred in core, and can not be
+ *	handeled by other logger interface. All messages that is sended by this
+ *	macro will be logged in pcore.log.
+ *
+ *	Note:
+ *	Do not use this macro, it is for internal use.
+ */
+#define PCORE_LOG_CORE_ERROR( __msg  ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::CoreError );
+
 
 
 namespace PCore
@@ -117,7 +126,16 @@ namespace PCore
 				Error,		// Error, in most of the cases, this type of errors, could be handled by application.
 				Warning,	// Warnings
 				Information,// Information
-				Trace		// Trace, this type of messages are for tracing the operations of application
+				Trace,		// Trace, this type of messages are for tracing the operations of application
+
+				/* Core error: this error type will be logged in pcore.log file
+				 * with out considering logger interface.
+				 *
+				 * Note:
+				 * Do not use this type because it is for internal use of core
+				 */
+				CoreError,
+
 			};
 			//Q_ENUMS( Type )
 
@@ -227,6 +245,13 @@ namespace PCore
 			 * \param _param_name: Name of the parameter
 			 */
 			QVariant getParam( QString& _param_name ) const;
+
+
+			/*!
+			 * \brief Return all params
+			 * \return all params
+			 */
+			ParamMap getParams( void ) const { return m_mParams; }
 
 
 			/*!

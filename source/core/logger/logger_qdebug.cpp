@@ -3,7 +3,7 @@
 //#	author:	Pouya Shahinfar (Pswin) - pswinpo@gmail.com
 //##############################################################################
 
-#include "headers/core/logger_qdebug.h"
+#include "headers/core/logger/logger_qdebug.h"
 #include <QDebug>
 
 

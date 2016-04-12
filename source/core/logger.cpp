@@ -5,9 +5,10 @@
 
 
 #include "include/pcore/core/logger.h"
-#include "headers/core/logger_dummy.h"
-#include "headers/core/logger_qdebug.h"
-#include "headers/core/logger_file.h"
+#include "headers/core/logger/logger_dummy.h"
+#include "headers/core/logger/logger_qdebug.h"
+#include "headers/core/logger/logger_file.h"
+#include "headers/core/logger/logger_network.h"
 #include <QSettings>
 #include <QDebug>
 
@@ -15,17 +16,35 @@
 #define __PCORE_LOGGER_INIT_HELPER( __logger, __name, __definer ) \
 		if ( __name == "file" ) \
 		{ \
-			QString file_name = settings.value( QString("logger/") + __definer + QString("_file"), "pbus.log" ).toString();\
+			QString file_name = settings.value( QString("logger/") + __definer + QString("_file"), "pcore.log" ).toString();\
 			if ( m_mLoggers.find( file_name ) != m_mLoggers.end() ) \
 			{ \
 				__logger = m_mLoggers[file_name];\
 			}\
 			else\
 			{\
-				PFileLogger* file_logger = new PFileLogger( this );\
+				FileLogger* file_logger = new FileLogger( this );\
 				file_logger->setFile( file_name );\
 				m_mLoggers[file_name] = file_logger;\
 				__logger = file_logger;\
+			}\
+		}\
+		else if ( __name == "network" )\
+		{\
+			NetworkLogger::port_t port = settings.value( QString("logger/") + __definer + QString("_port"), PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_PORT ).toInt();\
+			QString host = settings.value( QString("logger/") + __definer + QString("_host"), "127.0.0.1" ).toString();\
+			\
+			if ( m_mLoggers.find( host + ":" + QString::number(port) ) != m_mLoggers.end() ) \
+			{ \
+				__logger = m_mLoggers[host + ":" + QString::number(port)];\
+			}\
+			else\
+			{\
+				NetworkLogger* net_logger = new NetworkLogger( \
+											QHostAddress( host ), port, this );\
+				net_logger->connect();  /* TODO: change if connection failes */\
+				m_mLoggers[host + ":" + QString::number(port)] = net_logger;\
+				__logger = net_logger;\
 			}\
 		}\
 		else if ( __name == "qdebug" )\
@@ -69,7 +88,7 @@ namespace PCore
 			QString logger_error = settings.value( "logger/error_type", "file").toString();
 			QString logger_warning = settings.value( "logger/warning_type", "file").toString();
 			QString logger_information = settings.value( "logger/information_type", "file").toString();
-			QString logger_trace = settings.value( "logger/trace_type", "qdebug").toString();
+			QString logger_trace = settings.value( "logger/trace_type", "network").toString();
 
 			// initiating loggers
 			__PCORE_LOGGER_INIT_HELPER( m_pLoggerCritical, logger_critical, "critical" );

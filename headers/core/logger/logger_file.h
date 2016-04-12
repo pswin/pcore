@@ -22,6 +22,7 @@ namespace PCore
 	{
 		class FileLogger : public LoggerInterface
 		{
+
 		public:
 			//! constructor
 			FileLogger ( QObject* _parent );
