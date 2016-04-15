@@ -66,7 +66,7 @@ namespace PCore
 			 */
 			static QByteArray aesDecrypt( const QByteArray& _src,
 										  const QString& _key,
-										  AESBits _bits = AESBits::_12
+										  AESBits _bits = AESBits::_128
 										);
 
 			/*!

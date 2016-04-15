@@ -88,7 +88,7 @@ namespace PCore
 			QString logger_error = settings.value( "logger/error_type", "file").toString();
 			QString logger_warning = settings.value( "logger/warning_type", "file").toString();
 			QString logger_information = settings.value( "logger/information_type", "file").toString();
-			QString logger_trace = settings.value( "logger/trace_type", "network").toString();
+			QString logger_trace = settings.value( "logger/trace_type", "qdebug").toString();
 
 			// initiating loggers
 			__PCORE_LOGGER_INIT_HELPER( m_pLoggerCritical, logger_critical, "critical" );

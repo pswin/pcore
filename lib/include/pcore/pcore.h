@@ -14,5 +14,24 @@
 #define _PCORE_H
 
 
+//=====================================
+// root
+//=====================================
+
+#include "root.h"
+
+
+//=====================================
+// core
+//=====================================
+
+#include "core/logger.h"
+#include "core/hash.h"
+#include "core/crypto.h"
+#include "core/profiler.h"
+#include "core/exception.h"
+#include "core/compressor.h"
+
+
 
 #endif // _PCORE_H
