@@ -55,6 +55,14 @@
 
 
 
+/* Throw error
+ * If you enable this macro must functoin in case of failture will throw an
+ * error. Although PCore has a mechanism for controlling and reporting errors,
+ * yet this system could help you to pass errors to the upper layers.
+ */
+#define PCORE_CONFIG_THROW_ERROR PCORE_DISABLE
+
+
 /*=====================================
 	Logger
 =====================================*/

@@ -22,6 +22,14 @@
         ___profiler.start();
 
 
+#define PCORE_PROFILE_BLOCK_START( ___var, ___name ) \
+			PCore::core::Profiler ___var( ___name ); ___var.start();
+
+
+#define PCORE_PROFILE_BLOCK_END ( __var, __name )\
+			___var.stop();
+
+
 //=====================================
 // Classes
 //=====================================
@@ -85,6 +93,7 @@ namespace PCore
 			Q_CLASSINFO( "author", "Pouya Shahinfar" )
 			Q_CLASSINFO( "version", "1.0.0" )
 
+
 		public:
 			//=====================================
 			// Profile
@@ -95,12 +104,13 @@ namespace PCore
 				quint64	call_num = 0;		//! call number
 				quint64	total_time = 0;		//! total time
 				quint64	max_time = 0;		//! maximum time
-                                quint64	min_time = -1;		//! minimum time
+				quint64	min_time = -1;		//! minimum time
 				bool	is_started = false;	//! is started?
 				quint64	last_time = 0;		//!	last time
 				quint32	pending_count = 0;	//! pending call cout for reverse functions or multithread use
 				QMutex	lock;				//! lock for protecting structure in multithread use
 			};
+
 
 			//=====================================
 			// typedefs

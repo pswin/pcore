@@ -1,19 +1,48 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2016-04-06T22:42:23
-#
-#-------------------------------------------------
+################################################################################
+#                               PCore Library
+#                            By Pouya Shahinfar
+#                            pswinpo@gmail.com
+################################################################################
+
+
+#===============================================================================
+# Internal libs
+#===============================================================================
 
 QT       += network xml
-
 QT       -= gui
+
+
+#===============================================================================
+# Target
+#===============================================================================
 
 TARGET = pcore
 TEMPLATE = lib
 
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}
+
+
+#===============================================================================
+# Defines
+#===============================================================================
+
 DEFINES += PCORE_EXPORT
 
+
+#===============================================================================
+# Include path
+#===============================================================================
+
 INCLUDEPATH += ../
+
+
+#===============================================================================
+# Source/Header files
+#===============================================================================
 
 SOURCES += \
     source/core/globals.cpp \
@@ -29,7 +58,8 @@ SOURCES += \
     source/core/logger/logger_qdebug.cpp \
     source/core/hash.cpp \
     source/core/profiler.cpp \
-    source/core/logger/logger_network.cpp
+    source/core/logger/logger_network.cpp \
+    source/core/compressor.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -56,12 +86,30 @@ HEADERS +=\
     headers/core/logger/logger_network.h \
     headers/core/logger/logger_dummy.h \
     headers/core/logger/logger_file.h \
-    headers/core/logger/logger_qdebug.h
+    headers/core/logger/logger_qdebug.h \
+    include/pcore/core/compressor.h \
+    include/pcore/core/exception.h
 
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
+
 
 DISTFILES += \
     plan.txt
+
+
+#===============================================================================
+# Libs
+#===============================================================================
+
+#--------------------------------------
+# zlib
+#--------------------------------------
+win32:contains( QMAKE_HOST.arch, x86_64 ) {
+    LIBS += -L$$PWD/3rdparty/zlib/bin_x64 -lzdll
+} else:win32 {
+   LIBS += -L$$PWD/3rdparty/zlib/bin_x86 -lzdll
+} else:unix {
+   LIBS += -lz
+}
+
+INCLUDEPATH += $$PWD/3rdparty/zlib/include
+DEPENDPATH += $$PWD/3rdparty/zlib/include

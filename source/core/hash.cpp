@@ -22,14 +22,14 @@ namespace PCore
 		}
 
 		//! crc32
-		quint32 Hash::crc32(const QString& _str, quint32 _seed)
+		quint32 Hash::crc32( const QString& _str, quint32 _seed )
 		{
 			QByteArray ar = _str.toLocal8Bit();
 			return hash_crc32( (const uchar*)ar.data(), ar.size(), _seed );
 		}
 
 		//! md5
-		QString Hash::md5(const QByteArray& _src)
+		QString Hash::md5( const QByteArray& _src )
 		{
 			char buf[33];
 			hash_md5( (unsigned char*)_src.data(),
@@ -39,7 +39,7 @@ namespace PCore
 		}
 
 		//! md5
-		QString Hash::md5(const QString& _src)
+		QString Hash::md5( const QString& _src )
 		{
 			char buf[33];
 			QByteArray ar = _src.toLocal8Bit();
