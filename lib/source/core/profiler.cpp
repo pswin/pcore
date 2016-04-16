@@ -156,11 +156,14 @@ namespace PCore
 
 				QTextStream st(&f);
 
+				st << "name, call num, total time, max time, min time" <<
+					  PCORE_NEW_LINE;
+
 				for ( auto it : m_Map )
 				{
 					st << it->name << ", " << it->call_num << ", " << \
 						  it->total_time << ", " << it->max_time << ", " << \
-						  it->min_time;
+						  it->min_time << PCORE_NEW_LINE;
 				}
 
 				st.flush();

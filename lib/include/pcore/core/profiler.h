@@ -18,7 +18,7 @@
 //=====================================
 
 #define PCORE_PROFILE_FUNCTION( ) \
-	PCore::core::Profiler ___profiler( PCORE_FUNC_NAME );\
+	PCore::core::Profiler ___profiler( PCORE_FILE_NAME + "::" + PCORE_FUNC_NAME );\
         ___profiler.start();
 
 
@@ -26,7 +26,7 @@
 			PCore::core::Profiler ___var( ___name ); ___var.start();
 
 
-#define PCORE_PROFILE_BLOCK_END ( __var, __name )\
+#define PCORE_PROFILE_BLOCK_END( ___var )\
 			___var.stop();
 
 

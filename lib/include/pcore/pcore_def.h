@@ -62,16 +62,19 @@
 	// string convector for constants
 	#define PCORE_CHAR_STRING(__str) #__str
 
-	//! line number and file name
+	// line number and file name
 	#define PCORE_LINE_NUMBER  __LINE__
 	#define PCORE_LINE_NUMBER_STR  QString ( PCORE_CHAR_STRING( __LINE__ ) )
 	#define PCORE_FILE_NAME QString( __FILE__ )
 	#define PCORE_FUNC_NAME QString( __FUNCTION__ )
 
-	//! extern
+	// extern
 	#define PCORE_EXTERN( __type, __var ) extern "C" { PCORE_API extern __type __var; }
 	
-	//! noop
+	// noop
 	#define PCORE_NOOP(__assert_expr)
+
+	// new line
+	#define PCORE_NEW_LINE "\r\n"
 
 #endif // _PCORE_DEF_H
