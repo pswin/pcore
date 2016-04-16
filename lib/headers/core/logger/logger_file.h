@@ -22,7 +22,21 @@ namespace PCore
 	{
 		class FileLogger : public LoggerInterface
 		{
+			//=====================================
+			// Metadata
+			//=====================================
+			Q_OBJECT
 
+			Q_CLASSINFO( "author", "Pouya Shahinfar" )
+			Q_CLASSINFO( "version", "1.0.0" )
+
+			Q_PROPERTY(QString filename READ getFilename WRITE setFile )
+			Q_PROPERTY(bool is_open READ isOpen )
+
+
+			//=====================================
+			// public methods
+			//=====================================
 		public:
 			//! constructor
 			FileLogger ( QObject* _parent );
@@ -56,9 +70,12 @@ namespace PCore
 			/*!
 			 * \brief Clear content of the file
 			 */
-			void clearContent( void );
+			Q_INVOKABLE void clearContent( void );
 
 
+			//=====================================
+			// private members
+			//=====================================
 		private:
 			//! pointer to the file class instance
 			QFile*	m_pFile = nullptr;

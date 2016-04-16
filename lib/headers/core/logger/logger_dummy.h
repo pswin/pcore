@@ -20,6 +20,18 @@ namespace PCore
 	{
 		class DummyLogger : public PCore::core::LoggerInterface
 		{
+			//=====================================
+			// Metadata
+			//=====================================
+			Q_OBJECT
+
+			Q_CLASSINFO( "author", "Pouya Shahinfar" )
+			Q_CLASSINFO( "version", "1.0.0" )
+
+
+			//=====================================
+			// public mthods
+			//=====================================
 		public:
 			/*!
 			 * \brief Constructor

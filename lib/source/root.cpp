@@ -18,7 +18,7 @@ namespace PCore
 	Root::Root( QObject* _parent )
 			: QObject( _parent )
 	{
-		//PCORE_LOG_TRACE( "Root::Root called." );
+		pRoot = this;
 	}
 
 	//! init
@@ -37,12 +37,13 @@ namespace PCore
 		return true;
 	}
 
+	//! getVersionString
 	QString Root::getVersionString() const
 	{
 		return PCORE_VERSION_NAME;
 	}
 
-	//! getVersion
+	//! getVersionNumber
 	QVersionNumber Root::getVersionNumber( void ) const
 	{
 		return QVersionNumber(	PCORE_VERSION_MAJOR,

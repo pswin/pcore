@@ -8,11 +8,23 @@
 #define _PCORE_ROOT
 
 #include "pcore_def.h"
+#include "globals.h"
 #include "config.h"
 #include <QObject>
 #include <QString>
 #include <QVersionNumber>
 
+
+//==============================================================================
+// Macros
+//==============================================================================
+
+#define PCORE_INIT( ) pRoot = new PCore::Root(); pRoot->init();
+
+
+//==============================================================================
+// Class
+//==============================================================================
 namespace PCore
 {
 	class PCORE_API Root : public QObject

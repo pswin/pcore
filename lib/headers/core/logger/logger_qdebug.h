@@ -19,6 +19,17 @@ namespace PCore
 	{
 		class QDebugLogger : public LoggerInterface
 		{
+			//=====================================
+			// Metadata
+			//=====================================
+			Q_OBJECT
+
+			Q_CLASSINFO( "author", "Pouya Shahinfar" )
+			Q_CLASSINFO( "version", "1.0.0" )
+
+			//=====================================
+			// public mthods
+			//=====================================
 		public:
 
 			//! constructor

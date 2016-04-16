@@ -74,7 +74,9 @@ namespace PCore
 		//=====================================
 		// constructor
 		//=====================================
-		PCore::core::Logger::Logger( QString _setting_file, QObject* _parent )
+		PCore::core::Logger::Logger(
+								const QString& _setting_file,
+								QObject* _parent )
 			: QObject( _parent )
 		{
 			// setting up default loggers
@@ -122,6 +124,34 @@ namespace PCore
 				m_pLoggerWarning->logMessage( _msg );
 				break;
 			}
+		}
+
+
+		//=====================================
+		// getLogger
+		//=====================================
+		LoggerInterface*Logger::getLogger( LogMessage::Type _type ) const
+		{
+			switch ( _type )
+			{
+				case LogMessage::Type::Critical:
+					return m_pLoggerCritical;
+					break;
+				case LogMessage::Type::Error:
+					return m_pLoggerError;
+					break;
+				case LogMessage::Type::Warning:
+					return m_pLoggerWarning;
+					break;
+				case LogMessage::Type::Information:
+					return m_pLoggerInfo;
+					break;
+				case LogMessage::Type::Trace:
+					return m_pLoggerTrace;
+					break;
+			}
+
+			return nullptr;
 		}
 
 		//==============================================================================

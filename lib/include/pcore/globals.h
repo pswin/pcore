@@ -29,12 +29,15 @@ namespace PCore
 		class Logger;
 		class ProfileManager;
 	} // Logger
+
+	class Root;
 } // PCore
 
 
 
 PCORE_EXTERN( PCore::core::Logger*, pLogger )
 PCORE_EXTERN( PCore::core::ProfileManager*, pProfileManager )
+PCORE_EXTERN( PCore::Root*, pRoot )
 
 
 #endif // _PCORE_GLOBALS

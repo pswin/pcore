@@ -21,7 +21,7 @@
 
 
 #define __PCORE_LOG_MESSAGE_HELPER( __msg, __type ) pLogger->log( \
-			PLogMessage( QString(__msg), PCORE_FILE_NAME , \
+			PCore::core::LogMessage( QString(__msg), PCORE_FILE_NAME , \
 					PCORE_FUNC_NAME, PCORE_LINE_NUMBER, __type ) );
 
 // critical
@@ -380,6 +380,7 @@ namespace PCore
 			//=====================================
 			// Metadata
 			//=====================================
+
 			Q_OBJECT
 			Q_CLASSINFO( "author", "Pouya Shahinfar" )
 			Q_CLASSINFO( "version", "1.0.0" )
@@ -389,14 +390,30 @@ namespace PCore
 			// public methods
 			//=====================================
 		public:
+
 			/*!
 			 * \brief Constructor
+			 * \param _setting_file: filename and path of setting file.
+			 * \param _parent: Parent object.
 			 */
-			Logger( QString _setting_file ,QObject* _parent = nullptr );
+			Logger( const QString& _setting_file ,QObject* _parent = nullptr );
 
 
-
+			/*!
+			 * \brief Logs given message.
+			 * \param _msg: specifies the message that must be logged.
+			*/
 			Q_INVOKABLE void log( const LogMessage& _msg );
+
+
+			/*!
+			 * \brief Returns specified logger.
+			 * \param _type: Logger type.
+			 * \return specified logger by _type arg.
+			 */
+			LoggerInterface* getLogger( LogMessage::Type _type ) const;
+
+
 
 			//=====================================
 			// private members

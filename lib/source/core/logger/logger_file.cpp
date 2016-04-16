@@ -60,7 +60,10 @@ namespace PCore
 		{
 			if ( m_pFile != nullptr )
 			{
-				if ( m_pFile->isOpen() == true ) m_pFile->close();
+				if ( m_pFile->isOpen() == true )
+				{
+					m_pFile->close();
+				}
 			}
 		}
 

@@ -40,6 +40,7 @@ namespace PCore
 			//=====================================
 			// metadata
 			//=====================================
+			Q_OBJECT
 
 			//! info
 			Q_CLASSINFO( "author", "Pouya Shahinfar" )
