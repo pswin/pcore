@@ -62,7 +62,9 @@ SOURCES += \
     source/core/hash.cpp \
     source/core/profiler.cpp \
     source/core/logger/logger_network.cpp \
-    source/core/compressor.cpp
+    source/core/compressor.cpp \
+    source/core/system_info/system_info_win.cpp \
+    source/core/windows/win_wmi.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -91,7 +93,9 @@ HEADERS +=\
     headers/core/logger/logger_file.h \
     headers/core/logger/logger_qdebug.h \
     include/pcore/core/compressor.h \
-    include/pcore/core/exception.h
+    include/pcore/core/exception.h \
+    include/pcore/core/system_information.h \
+    headers/core/windows/win_wmi.h
 
 
 
