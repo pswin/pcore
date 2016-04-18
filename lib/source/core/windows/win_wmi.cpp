@@ -8,6 +8,17 @@
 
 #if PCORE_OS == PCORE_OS_WINDOWS
 
+// converting QString to BSTR
+BSTR qstringToBstr( const QString &qstring )
+{
+		WCHAR* const pBuffer = new WCHAR[qstring.size()+1];
+		qstring.toWCharArray(pBuffer);
+		pBuffer[qstring.size()]=0;
+		BSTR result = SysAllocString(pBuffer);
+		delete [] pBuffer;
+		return result;
+}
+
 namespace PCore
 {
 	namespace core
@@ -20,12 +31,17 @@ namespace PCore
 				//! initializing com
 				HRESULT hr = CoInitializeEx( NULL, COINIT_MULTITHREADED );
 
-				if ( FAILED( hr ) )
+				if ( hr == S_FALSE || hr == RPC_E_CHANGED_MODE )
+				{
+					// just ignore the case
+				}
+				else if ( FAILED( hr ) )
 				{
 					PCORE_LOG_ERROR( "COM initialization failed" );
 					m_bInitialized = false;
 					return;
 				}
+
 
 				// process-wide security context setup
 				hr = CoInitializeSecurity( NULL,	// we're not a server
@@ -46,6 +62,8 @@ namespace PCore
 					return;
 				}
 
+
+
 				// creating COM instance
 				hr = CoCreateInstance(
 									CLSID_WbemAdministrativeLocator,
@@ -63,9 +81,11 @@ namespace PCore
 				}
 
 				// connecting to local server
-				hr = locator->ConnectServer( L"root\\cimv2", NULL, NULL, NULL,
+				BSTR str = SysAllocString( L"root\\cimv2" );
+				hr = m_pLocator->ConnectServer( str, NULL, NULL, NULL,
 											 WBEM_FLAG_CONNECT_USE_MAX_WAIT,
 											 NULL, NULL, &m_pService );
+				SysFreeString( str );
 
 				if ( FAILED( hr ) )
 				{
@@ -74,22 +94,29 @@ namespace PCore
 					return;
 				}
 
+				m_bInitialized = true;
+
 			} // constructor
+
 
 			//! executeQuery
 			bool WMI::executeQuery( const QString& _query )
 			{
 				if ( m_bInitialized == false ) return false;
-				HRESULT hr = service->ExecQuery( L"WQL",
-												 _query.toStdU32String().data(),
+
+				HRESULT hr = m_pService->ExecQuery(
+												 qstringToBstr( "WQL" ),
+												 qstringToBstr( _query ),
 												 WBEM_FLAG_FORWARD_ONLY,
 												 NULL,
 												 &m_pIterator
 												);
 
+
 				if ( FAILED(hr) )
 				{
 					PCORE_LOG_ERROR( "WMI: Executing query: '"+_query+"' failed." );
+					m_pCurrentRow = nullptr;
 					return false;
 				}
 
@@ -101,11 +128,11 @@ namespace PCore
 			{
 				if ( m_bInitialized == false ) return false;
 				QString q = "SELECT * from " + _data_source;
-				return this->executeQuery( q.toStdU32String().data() );
+				return this->executeQuery( q );
 			}
 
 			//! nextItem
-			bool WMI::nextItem( void ) const
+			bool WMI::nextItem( void )
 			{
 				if ( m_bInitialized == false ) return false;
 
@@ -131,19 +158,17 @@ namespace PCore
 			{
 				if ( m_pCurrentRow == nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = false;
+					if ( _sucsess != nullptr ) *_sucsess = false;
 					return "";
 				}
 
 				_variant_t var;
-				HRESULT hr = processor->Get(
-										_col_name.toStdWString().data(),
-										0, &var, NULL, NULL );
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name),0, &var, NULL, NULL );
 
 				if ( SUCCEEDED(hr)&& var.bstrVal != nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = true;
-					return QString( var.bstrVal );
+					if ( _sucsess != nullptr ) *_sucsess = true;
+					return QString::fromUtf16((char16_t*)var.bstrVal);
 				}
 
 				return QString();
@@ -155,18 +180,16 @@ namespace PCore
 			{
 				if ( m_pCurrentRow == nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = false;
+					if ( _sucsess != nullptr ) *_sucsess = false;
 					return 0;
 				}
 
 				_variant_t var;
-				HRESULT hr = processor->Get(
-										_col_name.toStdWString().data(),
-										0, &var, NULL, NULL );
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0, &var, NULL, NULL );
 
 				if ( SUCCEEDED(hr) )
 				{
-					if ( _sucsess != nullptr ) _sucsess = true;
+					if ( _sucsess != nullptr ) *_sucsess = true;
 					return (quint32)var.intVal;
 				}
 
@@ -179,18 +202,16 @@ namespace PCore
 			{
 				if ( m_pCurrentRow == nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = false;
+					if ( _sucsess != nullptr ) *_sucsess = false;
 					return 0;
 				}
 
 				_variant_t var;
-				HRESULT hr = processor->Get(
-										_col_name.toStdWString().data(),
-										0, &var, NULL, NULL );
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0, &var, NULL, NULL );
 
 				if ( SUCCEEDED(hr) )
 				{
-					if ( _sucsess != nullptr ) _sucsess = true;
+					if ( _sucsess != nullptr ) *_sucsess = true;
 					return (quint16)var.intVal;
 				}
 
@@ -203,18 +224,17 @@ namespace PCore
 			{
 				if ( m_pCurrentRow == nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = false;
+					if ( _sucsess != nullptr ) *_sucsess = false;
 					return 0;
 				}
 
 				_variant_t var;
-				HRESULT hr = processor->Get(
-										_col_name.toStdWString().data(),
-										0, &var, NULL, NULL );
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0, &var, NULL, NULL );
+
 
 				if ( SUCCEEDED(hr) )
 				{
-					if ( _sucsess != nullptr ) _sucsess = true;
+					if ( _sucsess != nullptr ) *_sucsess = true;
 					return (quint64)var.llVal;
 				}
 
@@ -223,22 +243,21 @@ namespace PCore
 
 
 			//! getDouble
-			quint64 WMI::getDouble( const QString& _col_name, bool* _sucsess )
+			double WMI::getDouble( const QString& _col_name, bool* _sucsess )
 			{
 				if ( m_pCurrentRow == nullptr )
 				{
-					if ( _sucsess != nullptr ) _sucsess = false;
+					if ( _sucsess != nullptr ) *_sucsess = false;
 					return 0;
 				}
 
 				_variant_t var;
-				HRESULT hr = processor->Get(
-										_col_name.toStdWString().data(),
-										0, &var, NULL, NULL );
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0, &var, NULL, NULL );
+
 
 				if ( SUCCEEDED(hr) )
 				{
-					if ( _sucsess != nullptr ) _sucsess = true;
+					if ( _sucsess != nullptr ) *_sucsess = true;
 					return (double)var.dblVal;
 				}
 

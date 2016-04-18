@@ -63,8 +63,8 @@ SOURCES += \
     source/core/profiler.cpp \
     source/core/logger/logger_network.cpp \
     source/core/compressor.cpp \
-    source/core/system_info/system_info_win.cpp \
-    source/core/windows/win_wmi.cpp
+    source/core/windows/win_wmi.cpp \
+    source/core/system_info/system_information_win.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -120,3 +120,10 @@ win32:contains( QMAKE_HOST.arch, x86_64 ) {
 
 INCLUDEPATH += $$PWD/3rdparty/zlib/include
 DEPENDPATH += $$PWD/3rdparty/zlib/include
+
+
+#--------------------------------------
+# Windows COM
+#--------------------------------------
+
+win32: LIBS+= -lwbemuuid -lcomsupp

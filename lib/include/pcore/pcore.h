@@ -31,6 +31,7 @@
 #include "core/profiler.h"
 #include "core/exception.h"
 #include "core/compressor.h"
+#include "core/system_information.h"
 
 
 

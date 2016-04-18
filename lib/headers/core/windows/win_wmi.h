@@ -24,10 +24,8 @@
 #include <windows.h>
 #include <objbase.h>
 #include <atlbase.h>
-#include <iostream>
 #include <wbemidl.h>
 #include <comutil.h>
-#include <QString>
 
 
 //==============================================================================
@@ -68,7 +66,7 @@ namespace PCore
 				 * \brief it will go to the next row of data if it was avilable.
 				 * \return True if a new raw is abvilable.
 				 */
-				bool nextItem( void ) const;
+				bool nextItem( void );
 
 
 				/*!
