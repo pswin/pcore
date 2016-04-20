@@ -22,7 +22,11 @@
 	#define PCORE_ARCH_X86_64	3	//! X86-64
 	#define PCORE_ARCH_ARM_32	4	//!	ARM 32-bit
 	#define PCORE_ARCH_ARM_64	4	//!	ARM 64-bit
-	#define PCORE_ARCH_UNKNOWN	99,	//! Unknown architecture
+	#define PCORE_ARCH_UNKNOWN	99	//! Unknown architecture
+
+	#define PCORE_ARCH_FAMILY_X86		1	//! All processors in X86 family
+	#define PCORE_ARCH_FAMILY_ARM		2	//! All processors in ARM family
+	#define PCORE_ARCH_FAMILY_UNKOWN	99	//! Unknown family
 
 	//=====================================
 	// Big endian or little endian
@@ -45,6 +49,8 @@
 		defined ( _M_IX86 ) || defined ( _X86_ ) || defined (Q_PROCESSOR_X86_32)
 			#define PCORE_ARCH PCORE_ARCH_I386
 			#define PCORE_ARCH_WORD_SIZE	32
+			#define PCORE_ARCH_FAMILY PCORE_ARCH_FAMILY_X86
+			#define
 	#elif  defined ( __amd64__ ) || defined ( __amd64 ) || defined ( __x86_64__ )  ||\
 		defined ( __x86_64 ) || defined ( _M_X64 ) || defined ( _M_AMD64 ) || \
 		defined ( _M_IA64 ) || defined ( __ia64__ ) || defined ( _IA64 )  || \
@@ -52,6 +58,7 @@
 		defined ( _M_AMD64 ) || defined ( Q_PROCESSOR_X86_64 )
 			#define PCORE_ARCH PCORE_ARCH_X86_64
 			#define PCORE_ARCH_WORD_SIZE	64
+			#define PCORE_ARCH_FAMILY PCORE_ARCH_FAMILY_X86
 	#elif defined ( __aarch64__ )
 		#define PCORE_ARCH  PCORE_ARCH_ARM_64
 		#define PCORE_ARCH_WORD_SIZE	64
@@ -59,6 +66,7 @@
 		defined ( _M_ARMT ) || defined ( Q_PROCESSOR_ARM )
 			#define PCORE_ARCH PCORE_ARCH_ARM_32
 			#define PCORE_ARCH_WORD_SIZE	32
+			#define PCORE_ARCH_FAMILY PCORE_ARCH_FAMILY_ARM
 	#else
 		#define PCORE_ARCH PCORE_ARCH_UNKNOWN
 		#error "Compiling PCore failed, Unknown architecture"
