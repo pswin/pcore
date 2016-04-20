@@ -95,7 +95,8 @@ HEADERS +=\
     include/pcore/core/compressor.h \
     include/pcore/core/exception.h \
     include/pcore/core/system_information.h \
-    headers/core/windows/win_wmi.h
+    headers/core/windows/win_wmi.h \
+    include/pcore/core/bit_operations.h
 
 
 
