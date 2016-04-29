@@ -64,7 +64,9 @@ SOURCES += \
     source/core/logger/logger_network.cpp \
     source/core/compressor.cpp \
     source/core/windows/win_wmi.cpp \
-    source/core/system_info/system_information_win.cpp
+    source/core/system_info/sys_info_intel.cpp \
+    source/core/system_info/sys_info_amd.cpp \
+    source/core/system_info/sys_info_win.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -96,7 +98,9 @@ HEADERS +=\
     include/pcore/core/exception.h \
     include/pcore/core/system_information.h \
     headers/core/windows/win_wmi.h \
-    include/pcore/core/bit_operations.h
+    include/pcore/core/bit_operations.h \
+    headers/core/arch/intel/sys_info/sys_info_intel.h \
+    headers/core/arch/amd/sys_info/sys_info_amd.h
 
 
 

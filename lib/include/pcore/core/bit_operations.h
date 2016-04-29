@@ -12,7 +12,7 @@
  * \param __pos: Start position.
  * \param __len: Length of mask.
  */
-#define PCORE_GET_MASK( __pos, __len ) (((1 << (__len)) - 1) << (__pos))
+#define PCORE_BIT_MASK( __pos, __len ) (((1 << (__len)) - 1) << (__pos))
 
 
 /*
@@ -48,7 +48,7 @@
  *	\param __len: Length.
  */
 #define PCORE_BIT_READ( __var, __pos, __len ) \
-						( __var & PCORE_GET_MASK(__pos,__len) )
+						( __var & PCORE_BIT_MASK(__pos,__len) )
 
 /*
  *	\brif Writes given value in specified bits of given variable.
@@ -59,7 +59,7 @@
  */
 #define PCORE_BIT_WRITE( __var, __pos, __len, __val ) \
 							( __var = ( __val << __pos  ) | \
-							(~PCORE_GET_MASK(__pos,__len) & __var) )
+							(~PCORE_BIT_MASK(__pos,__len) & __var) )
 
 
 #endif // _PCORE_BIT_OPERATIONS_H
