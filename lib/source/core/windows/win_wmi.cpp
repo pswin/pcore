@@ -8,6 +8,18 @@
 
 #if PCORE_OS == PCORE_OS_WINDOWS
 
+
+//==============================================================================
+// global members
+//==============================================================================
+
+bool wmi_initialized = false;
+
+
+//==============================================================================
+// functions
+//==============================================================================
+
 // converting QString to BSTR
 BSTR qstringToBstr( const QString &qstring )
 {
@@ -19,6 +31,9 @@ BSTR qstringToBstr( const QString &qstring )
 		return result;
 }
 
+//==============================================================================
+// WMI Class
+//==============================================================================
 namespace PCore
 {
 	namespace core
@@ -28,64 +43,91 @@ namespace PCore
 			//! constructor
 			WMI::WMI()
 			{
-				//! initializing com
-				HRESULT hr = CoInitializeEx( NULL, COINIT_MULTITHREADED );
 
-				if ( hr == S_FALSE || hr == RPC_E_CHANGED_MODE )
+				HRESULT hr;
+				if ( wmi_initialized == false )
 				{
-					// just ignore the case
-				}
-				else if ( FAILED( hr ) )
-				{
-					PCORE_LOG_ERROR( "COM initialization failed" );
-					m_bInitialized = false;
-					return;
-				}
+					//! initializing com
+					hr = CoInitializeEx( NULL, COINIT_MULTITHREADED );
+
+					if ( hr == S_FALSE || hr == RPC_E_CHANGED_MODE )
+					{
+						// just ignore the case
+					}
+					else if ( FAILED( hr ) )
+					{
+						PCORE_LOG_ERROR( "COM initialization failed" );
+						m_bInitialized = false;
+						return;
+					}
 
 
-				// process-wide security context setup
-				hr = CoInitializeSecurity( NULL,	// we're not a server
-										   -1,		// we're not a server
-										   NULL,
-										   NULL,
-										   RPC_C_AUTHN_LEVEL_DEFAULT,
-										   RPC_C_IMP_LEVEL_IMPERSONATE,
-										   NULL,
-										   EOAC_NONE,
-										   NULL
+					// process-wide security context setup
+					hr = CoInitializeSecurity( NULL,	// we're not a server
+											   -1,		// we're not a server
+											   NULL,
+											   NULL,
+											   RPC_C_AUTHN_LEVEL_DEFAULT,
+											   RPC_C_IMP_LEVEL_IMPERSONATE,
+											   NULL,
+											   EOAC_NONE,
+											   NULL
+											);
+
+					if ( hr == RPC_E_TOO_LATE )
+					{
+						// just igonre the case
+					}
+					else if ( FAILED( hr ) )
+					{
+						PCORE_LOG_ERROR( "Security initialization failed" );
+						m_bInitialized = false;
+						return;
+					}
+
+					// creating COM instance
+					hr = CoCreateInstance(
+										CLSID_WbemAdministrativeLocator,
+										NULL,
+										CLSCTX_INPROC_SERVER,
+										IID_IWbemLocator,
+										reinterpret_cast< void** >( &m_pLocator )
 										);
 
-				if ( FAILED( hr ) )
+					if ( FAILED( hr ) )
+					{
+						PCORE_LOG_ERROR( "Creating instace of locator failed." );
+						m_bInitialized = false;
+						return;
+					}
+
+					wmi_initialized == true;
+				} // wmi_initialized
+				else
 				{
-					PCORE_LOG_ERROR( "Security initialization failed" );
-					m_bInitialized = false;
-					return;
-				}
-
-
-
-				// creating COM instance
-				hr = CoCreateInstance(
+					hr = CoGetClassObject(
 									CLSID_WbemAdministrativeLocator,
-									NULL,
-									CLSCTX_INPROC_SERVER,
+									CLSCTX_INPROC_SERVER, NULL,
 									IID_IWbemLocator,
 									reinterpret_cast< void** >( &m_pLocator )
-									);
+								);
 
-				if ( FAILED( hr ) )
-				{
-					PCORE_LOG_ERROR( "Creating instace of locator failed." );
-					m_bInitialized = false;
-					return;
+					if ( FAILED( hr ) )
+					{
+						PCORE_LOG_ERROR( "Getting instace of locator failed." );
+						m_bInitialized = false;
+						return;
+					}
 				}
 
+
+
+
 				// connecting to local server
-				BSTR str = SysAllocString( L"root\\cimv2" );
-				hr = m_pLocator->ConnectServer( str, NULL, NULL, NULL,
-											 WBEM_FLAG_CONNECT_USE_MAX_WAIT,
-											 NULL, NULL, &m_pService );
-				SysFreeString( str );
+				hr = m_pLocator->ConnectServer( qstringToBstr( "root\\cimv2" ),
+												NULL, NULL, NULL,
+												WBEM_FLAG_CONNECT_USE_MAX_WAIT,
+												NULL, NULL, &m_pService );
 
 				if ( FAILED( hr ) )
 				{

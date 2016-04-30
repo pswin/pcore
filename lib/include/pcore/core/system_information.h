@@ -35,9 +35,21 @@ namespace PCore
 			//=====================================
 		public:
 
-		//=====================================
-		// Public Structs
-		//=====================================
+			enum class AdapterStatus
+			{
+				Running,	//! Device is running or is in Full power.
+				Offline,	//! Device is offline.
+				PowerSave,	//! Device is in power save mode.
+				Paused,		//! Device is paused.
+				Warning,	//! There is a warning.
+				Error,		//! There is an error; Thus, it is out of order.
+				Unkown		//! Device is in an unkown mode.
+			}; // AdapterStatus
+
+
+			//=====================================
+			// Public Structs
+			//=====================================
 		public:
 			/*!
 			 *	\brif Processor Information
@@ -74,16 +86,19 @@ namespace PCore
 			 */
 			struct VideoControllerInformation
 			{
-				QString	name;
-				quint32	memory;
-				quint32 max_memory;
-				quint64	num_of_colors;
-				quint32	bits_per_pixel;
-				quint32	refresh_rate;
-				quint32 max_refresh_rate;
-				quint32 min_refresh_rate;
-				quint32 resolution_vertical;
-				quint32 resolution_horizantal;
+				quint32	index;							//! Index of adapter.
+				QString	name;							//! Name of adapter.
+				QString	vendor;							//! Vendor of adapter.
+				QString	video_mode_desc;				//! Current video mode description.
+				quint32	memory_size;					//! Ram size.
+				quint64	current_num_of_colors;			//! Current number of colors.
+				quint32	current_bits_per_pixel;			//! Bits per pixel.
+				quint32	current_refresh_rate;			//! Current refresh rate.
+				quint32	max_refresh_rate;				//! Maximum refresh rate.
+				quint32	min_refresh_rate;				//! Minimum refresh rate.
+				quint32	current_resolution_vertical;	//! Current vertical resolution.
+				quint32	current_resolution_horizantal;	//! Current horizantal resolution.
+				bool	is_running;						//! Is running?
 			}; // VideoControllerInformation
 
 
@@ -97,6 +112,13 @@ namespace PCore
 			 * \return information of all installed proccessors and return it.
 			 */
 			static QList<ProcessorInformation> getProcesses( void );
+
+
+			/*!
+			 * \brief Retrieves information of all installed video controllers and return it.
+			 * \return information of all installed video controllers and return it.
+			 */
+			static QList<VideoControllerInformation> getVideoControllers( void );
 
 		}; // System Information
 	} // core

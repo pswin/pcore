@@ -16,8 +16,11 @@ public:
 	~MainWindow();
 
 private:
-	//! fill process table
+	//! fills process table
 	void fillProcessTable();
+
+	//! fills video controller's table
+	void fillVideoControllerTable();
 
 
 private:

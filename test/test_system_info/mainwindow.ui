@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tab_info">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_processor">
        <attribute name="title">
@@ -37,10 +37,22 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tav_video">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Video Controllers</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QTableWidget" name="tlb_video">
+          <property name="minimumSize">
+           <size>
+            <width>401</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

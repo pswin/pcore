@@ -297,7 +297,9 @@ namespace PCore
 {
 	namespace core
 	{
-		//! getProcesses
+		//==============================================================================
+		// getProcesses
+		//==============================================================================
 		QList<SystemInformation::ProcessorInformation>
 										SystemInformation::getProcesses( void )
 		{
@@ -376,7 +378,48 @@ namespace PCore
 			}
 
 			return list;
-		}
+		} // getProcesses
+
+
+		//==============================================================================
+		// getVideoControllers
+		//==============================================================================
+		QList<SystemInformation::VideoControllerInformation>
+								SystemInformation::getVideoControllers( void )
+		{
+			PCore::core::windows::WMI wmi;
+
+			if ( wmi.selectAll("Win32_VideoController") == false )
+			{
+				PCORE_LOG_ERROR("Retrieveing processes information failed." );
+				return QList<VideoControllerInformation>();
+			}
+
+			QList<VideoControllerInformation> list;
+			quint16 index = 0;
+			while ( wmi.nextItem() == true )
+			{
+				VideoControllerInformation info;
+				info.index = index;
+				info.name = wmi.getString( "Name" );
+				info.vendor = wmi.getString( "AdapterCompatibility" );
+				info.video_mode_desc = wmi.getString( "VideoModeDescription" );
+				info.memory_size = wmi.getInt( "AdapterRAM" );
+				info.current_refresh_rate = wmi.getInt( "CurrentRefreshRate" );
+				info.max_refresh_rate = wmi.getInt( "MaxRefreshRate" );
+				info.min_refresh_rate = wmi.getInt( "MinRefreshRate" );
+				info.is_running = wmi.getShortInt( "Availability" ) == 3? true: false;
+				info.current_num_of_colors = wmi.getLongInt( "CurrentNumberOfColors" );
+				info.current_bits_per_pixel = wmi.getLongInt( "CurrentBitsPerPixel" );
+				info.current_resolution_horizantal = wmi.getInt( "CurrentHorizontalResolution" );
+				info.current_resolution_vertical = wmi.getInt( "CurrentVerticalResolution" );
+
+				index++;
+				list.push_back( info );
+			} // while
+
+			return list;
+		} // getVideoControllers
 
 	} // core
 } // PCore
