@@ -289,6 +289,44 @@ QString get_family_by_id( int _id )
 } // get_family_by_id
 
 
+/*!
+ * \note  This code is copied from following link:
+ *		https://msdn.microsoft.com/en-gb/library/windows/desktop/aa363147%28v=vs.85%29.aspx
+ */
+BOOL GetDriveGeometry( LPWSTR wszPath, DISK_GEOMETRY *pdg )
+{
+  HANDLE hDevice = INVALID_HANDLE_VALUE;  // handle to the drive to be examined
+  BOOL bResult   = FALSE;                 // results flag
+  DWORD junk     = 0;                     // discard results
+
+  hDevice = CreateFileW(wszPath,          // drive to open
+						0,                // no access to the drive
+						FILE_SHARE_READ | // share mode
+						FILE_SHARE_WRITE,
+						NULL,             // default security attributes
+						OPEN_EXISTING,    // disposition
+						0,                // file attributes
+						NULL);            // do not copy file attributes
+
+  if (hDevice == INVALID_HANDLE_VALUE)    // cannot open the drive
+  {
+	return (FALSE);
+  }
+
+  bResult = DeviceIoControl(hDevice,                       // device to be queried
+							IOCTL_DISK_GET_DRIVE_GEOMETRY, // operation to perform
+							NULL, 0,                       // no input buffer
+							pdg, sizeof(*pdg),            // output buffer
+							&junk,                         // # bytes returned
+							(LPOVERLAPPED) NULL);          // synchronous I/O
+
+  CloseHandle(hDevice);
+
+  return (bResult);
+} // GetDriveGeometry
+
+
+
 
 //==============================================================================
 // classes
@@ -307,7 +345,7 @@ namespace PCore
 
 			if ( wmi.selectAll("Win32_Processor") == false )
 			{
-				PCORE_LOG_ERROR("Retrieveing processes information failed." );
+				PCORE_LOG_ERROR("Retrieveing processor information failed." );
 				return QList<ProcessorInformation>();
 			}
 
@@ -421,14 +459,104 @@ namespace PCore
 			return list;
 		} // getVideoControllers
 
+
+		//==============================================================================
+		// getSorageInformation
+		//==============================================================================
+		QList<SystemInformation::StorageInformation>
+									SystemInformation::getSorageInformation()
+		{
+			PCore::core::windows::WMI wmi;
+			QList<StorageInformation> list;
+			quint16 index = 0;
+
+			if ( wmi.selectAll("Win32_DiskDrive") == true )
+			{
+				while ( wmi.nextItem() == true )
+				{
+					bool	is_random_access;		 //! Is a random access device.
+
+					StorageInformation info;
+					info.index = index;
+					info.name = wmi.getString( "Name" );
+					info.model = wmi.getString( "Model" );
+					info.vendor = wmi.getString( "Manufacturer" );
+					info.serial = wmi.getString( "SerialNumber" );
+					info.signature = QString::number( wmi.getInt( "Signature" ));
+					info.capacity = wmi.getLongInt( "Size" );
+					info.num_of_partitions = wmi.getInt( "Partitions" );
+					info.heads = wmi.getInt( "TotalHeads" );
+					info.cylinders = wmi.getLongInt( "TotalCylinders" );
+					info.tracks_per_cylinder = wmi.getInt( "TracksPerCylinder" );
+					info.sectors_per_track = wmi.getInt( "SectorsPerTrack" );
+					info.bytes_per_sector = wmi.getInt( "BytesPerSector" );
+
+
+					DISK_GEOMETRY pdg = { 0 };
+					if ( GetDriveGeometry( (LPWSTR)info.name.toStdWString().data(), &pdg ) )
+					{
+						info.cylinders = pdg.Cylinders.QuadPart;
+						info.bytes_per_sector = pdg.BytesPerSector;
+						info.sectors_per_track = pdg.SectorsPerTrack;
+						info.tracks_per_cylinder =  pdg.TracksPerCylinder;
+						info.capacity = pdg.Cylinders.QuadPart *
+										pdg.BytesPerSector *
+										pdg.SectorsPerTrack *
+										pdg.TracksPerCylinder;
+					}
+
+
+					auto cap = wmi.getIntArray( "Capabilities" );
+					if ( cap.indexOf( 3 ) >= 0 ) info.is_random_access = true;
+					if ( cap.indexOf( 4 ) >= 0 ) info.is_writable = true;
+					if ( cap.indexOf( 7 ) >= 0 ) info.is_removeable = true;
+					if ( cap.indexOf( 2 ) >= 0 ) info.is_sequential = true;
+
+					QString interfac = wmi.getString( "InterfaceType" );
+
+					if ( interfac == "SCSI" )
+					{
+						info.interface_type = InterfaceType::SCSI;
+					}
+					else if ( interfac == "HDC" )
+					{
+						info.interface_type = InterfaceType::HDC;
+					}
+					else if ( interfac == "IDE" )
+					{
+						info.interface_type = InterfaceType::IDE;
+					}
+					else if ( interfac == "USB" )
+					{
+						info.interface_type = InterfaceType::USB;
+					}
+					else if ( interfac == "1394" )
+					{
+						info.interface_type = InterfaceType::_1394;
+					}
+					else
+					{
+						PCORE_LOG_INFO( "New interface type for windows: " + interfac );
+						info.interface_type = InterfaceType::Unknown;
+					}
+
+
+					index++;
+					list.push_back( info );
+				} // while
+			}
+			else
+			{
+				PCORE_LOG_ERROR("Retrieveing disk informations failed." );
+				return QList<StorageInformation>();
+			}
+
+
+
+			return list;
+		} // getSorageInformation
+
 	} // core
 } // PCore
-
-
-
-
-
-
-
 #endif // PCORE_OS_WINDOWS
 

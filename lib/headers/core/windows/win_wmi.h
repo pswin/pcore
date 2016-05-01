@@ -26,6 +26,8 @@
 #include <atlbase.h>
 #include <wbemidl.h>
 #include <comutil.h>
+#include <QList>
+#include <QString>
 
 
 //==============================================================================
@@ -129,6 +131,32 @@ namespace PCore
 									const QString& _col_name,
 									bool* _sucsess = nullptr
 								);
+
+				/*!
+				 * \brief return an arrays of ints which is in current row and
+				 *			specified column.
+				 * \param _col_name: Name of column or class member.
+				 * \param _sucsess: specifies getting value was successful or not.
+				 * \return
+				 */
+				 QList<quint32> getIntArray(
+									const QString& _col_name,
+									bool* _sucsess = nullptr
+								);
+
+
+				 /*!
+				  * \brief return an arrays of strings which is in current row and
+				  *			specified column.
+				  * \param _col_name: Name of column or class member.
+				  * \param _sucsess: specifies getting value was successful or not.
+				  * \return
+				  */
+				  QList<QString> getStringArray(
+									 const QString& _col_name,
+									 bool* _sucsess = nullptr
+								 );
+
 
 				//=====================================
 				// private members

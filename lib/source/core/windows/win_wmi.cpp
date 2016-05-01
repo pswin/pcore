@@ -8,6 +8,8 @@
 
 #if PCORE_OS == PCORE_OS_WINDOWS
 
+#include <OleAuto.h>
+
 
 //==============================================================================
 // global members
@@ -101,7 +103,7 @@ namespace PCore
 						return;
 					}
 
-					wmi_initialized == true;
+					//wmi_initialized = true;
 				} // wmi_initialized
 				else
 				{
@@ -304,7 +306,105 @@ namespace PCore
 				}
 
 				return 0;
-			} // getDouble
+			}
+
+
+			//! getIntArray
+			QList<quint32> WMI::getIntArray(const QString& _col_name,
+															bool* _sucsess)
+			{
+				if ( m_pCurrentRow == nullptr )
+				{
+					if ( _sucsess != nullptr ) *_sucsess = false;
+					return QList<quint32>();
+				}
+
+				QList<quint32> list;
+
+				_variant_t var;
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0,
+															&var, NULL, NULL );
+
+				if ( SUCCEEDED(hr) )
+				{
+					if ( ( var.vt==VT_NULL ) || ( var.vt==VT_EMPTY ) ||
+							( var.parray == nullptr ) )
+					{
+						if ( _sucsess != nullptr ) *_sucsess = false;
+						return list;
+					}
+					else
+					{
+						quint32 it = NULL;
+						LONG lower_band,upper_band = 0;
+						SAFEARRAY *safe_array = var.parray;
+						SafeArrayGetLBound( safe_array, 1, &lower_band );
+						SafeArrayGetUBound( safe_array, 1, &upper_band );
+
+						for (long i = lower_band; i <= upper_band; i++)
+						{
+							hr = SafeArrayGetElement(safe_array, &i,
+													   (UINT32*)&it );
+							list.push_back( it );
+						}
+						//SafeArrayDestroy( safe_array );
+
+						if ( _sucsess != nullptr ) *_sucsess = true;
+						return list;
+					}
+				}
+
+				return list;
+			}
+
+
+			QList<QString> WMI::getStringArray(const QString& _col_name,
+																bool* _sucsess)
+			{
+				if ( m_pCurrentRow == nullptr )
+				{
+					if ( _sucsess != nullptr ) *_sucsess = false;
+					return QList<QString>();
+				}
+
+				QList<QString> list;
+
+				_variant_t var;
+				HRESULT hr = m_pCurrentRow->Get( qstringToBstr(_col_name), 0,
+															&var, NULL, NULL );
+
+				if ( SUCCEEDED(hr) )
+				{
+					if ( ( var.vt== VT_NULL ) || ( var.vt== VT_EMPTY ) ||
+							( var.parray == nullptr ) )
+					{
+						if ( _sucsess != nullptr ) *_sucsess = false;
+						return list;
+					}
+					else
+					{
+						BSTR it = NULL;
+						LONG lower_band,upper_band = 0;
+						SAFEARRAY *safe_array = var.parray;
+						SafeArrayGetLBound( safe_array, 1, &lower_band );
+						SafeArrayGetUBound( safe_array, 1, &upper_band );
+
+						for (long i = lower_band; i <= upper_band; i++)
+						{
+							hr = SafeArrayGetElement(safe_array, &i, &it );
+
+							if ( SUCCEEDED(hr) )
+							list.push_back( QString::fromUtf16( (char16_t*)it ) );
+						}
+						//SafeArrayDestroy( safe_array );
+
+						if ( _sucsess != nullptr ) *_sucsess = true;
+						return list;
+					}
+				}
+
+				return list;
+			} // getIntList
 
 
 		} // windows

@@ -22,6 +22,9 @@ private:
 	//! fills video controller's table
 	void fillVideoControllerTable();
 
+	//! fills storages table
+	void fillStorageTable();
+
 
 private:
 	Ui::MainWindow *ui;
