@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tab_storage">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab_processor">
        <attribute name="title">
@@ -61,6 +61,23 @@
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QTableWidget" name="tbl_storages">
+          <property name="minimumSize">
+           <size>
+            <width>401</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_monitors">
+       <attribute name="title">
+        <string>Monitors</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tbl_monitors">
           <property name="minimumSize">
            <size>
             <width>401</width>

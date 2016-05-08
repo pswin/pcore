@@ -25,6 +25,8 @@ private:
 	//! fills storages table
 	void fillStorageTable();
 
+	//! monitros
+	void fillMonitors( );
 
 private:
 	Ui::MainWindow *ui;

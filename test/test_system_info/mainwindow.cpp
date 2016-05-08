@@ -58,8 +58,10 @@ QString get_interface( PCore::core::SystemInformation::InterfaceType _val )
 	{
 	case PCore::core::SystemInformation::InterfaceType::HDC:
 		return "HDC";
+	case PCore::core::SystemInformation::InterfaceType::SATA:
+		return "SATA";
 	case PCore::core::SystemInformation::InterfaceType::IDE:
-		return "IDE";
+		return "IDE/SATA";
 	case PCore::core::SystemInformation::InterfaceType::SCSI:
 		return "SCSI";
 	case PCore::core::SystemInformation::InterfaceType::USB:
@@ -67,6 +69,29 @@ QString get_interface( PCore::core::SystemInformation::InterfaceType _val )
 	case PCore::core::SystemInformation::InterfaceType::_1394:
 		return "1394";
 	case PCore::core::SystemInformation::InterfaceType::Unknown:
+		return "Unknown";
+	default:
+		return "Unknown";
+	}
+}
+
+QString get_storage_type ( PCore::core::SystemInformation::StorageType _val )
+{
+	switch ( _val )
+	{
+	case PCore::core::SystemInformation::StorageType::ExternalDisk:
+		return "External Hard disk";
+	case PCore::core::SystemInformation::StorageType::FixedDisk:
+		return "Fixed hard disk";
+	case PCore::core::SystemInformation::StorageType::FlashDisk:
+		return "Flash memory";
+	case PCore::core::SystemInformation::StorageType::Floppy:
+		return "Floppy";
+	case PCore::core::SystemInformation::StorageType::RemovableMedia:
+		return "Removable media";
+	case PCore::core::SystemInformation::StorageType::Tape:
+		return "Tape";
+	case PCore::core::SystemInformation::StorageType::Unknown:
 		return "Unknown";
 	default:
 		return "Unknown";
@@ -83,6 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	fillProcessTable();
 	fillVideoControllerTable();
 	fillStorageTable();
+	fillMonitors();
 
 }
 
@@ -141,18 +167,22 @@ void MainWindow::fillVideoControllerTable()
 	for ( auto it : video_list )
 	{
 		TABLE_INSERT_ROW( ui->tlb_video, it.index, "Name", it.name );
+		TABLE_INSERT_ROW( ui->tlb_video, it.index, "Model", it.model );
 		TABLE_INSERT_ROW( ui->tlb_video, it.index, "Vendor", it.vendor );
 		TABLE_INSERT_ROW_HR( ui->tlb_video, it.index, "Memory Size", it.memory_size );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Current Refresh rate", it.current_refresh_rate );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Max Refresh rate", it.max_refresh_rate );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Min Refresh rate", it.min_refresh_rate );
+		TABLE_INSERT_ROW( ui->tlb_video, it.index, "Video Mode", it.video_mode_desc );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Current Reolution Ver", it.current_resolution_vertical );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Current Reolution Hor", it.current_resolution_horizantal );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Current Num of Colors", it.current_num_of_colors );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, it.index, "Current Bits per pixel", it.current_bits_per_pixel );
 		TABLE_INSERT_ROW( ui->tlb_video, it.index, "Is running", it.is_running? "True": "False" );
 	}
-}
+} // fillVideoControllerTable
+
+
 
 void MainWindow::fillStorageTable()
 {
@@ -167,7 +197,7 @@ void MainWindow::fillStorageTable()
 
 
 
-	auto storage_list = PCore::core::SystemInformation::getSorageInformation();
+	auto storage_list = PCore::core::SystemInformation::getStorages();
 
 	int row_index = 0;
 	for ( auto it : storage_list )
@@ -189,10 +219,34 @@ void MainWindow::fillStorageTable()
 		TABLE_INSERT_ROW_BOOL( ui->tbl_storages, it.index, "Removeable", it.is_removeable );
 		TABLE_INSERT_ROW_BOOL( ui->tbl_storages, it.index, "Writable", it.is_writable );
 		TABLE_INSERT_ROW_INTERFACE( ui->tbl_storages, it.index, "Interface", it.interface_type );
-
+		TABLE_INSERT_ROW( ui->tbl_storages, it.index, "Type", get_storage_type(it.type) );
 	}
 
 }
+
+
+void MainWindow::fillMonitors()
+{
+	// setting up table widget
+	ui->tbl_monitors->setColumnCount( 3 );
+	ui->tbl_monitors->setHorizontalHeaderLabels(
+						QStringList({"Index","Property","Value"}) );
+	ui->tbl_monitors->setColumnWidth( 0, 30 );
+	ui->tbl_monitors->setColumnWidth( 1, 150 );
+	ui->tbl_monitors->horizontalHeader()->setSectionResizeMode( 2,
+														QHeaderView::Stretch );
+	auto monitor_list = PCore::core::SystemInformation::getMonitors();
+
+	int row_index = 0;
+	for ( auto it : monitor_list )
+	{
+		TABLE_INSERT_ROW( ui->tbl_monitors, it.index, "Name", it.name );
+		TABLE_INSERT_ROW( ui->tbl_monitors, it.index, "Model", it.model );
+		TABLE_INSERT_ROW( ui->tbl_monitors, it.index, "Connected to", it.connected_to );
+		TABLE_INSERT_ROW_NUM( ui->tbl_monitors, it.index, "Width", it.screen_width );
+		TABLE_INSERT_ROW_NUM( ui->tbl_monitors, it.index, "Height", it.screen_height );
+	}
+} // fillStorageTable
 
 
 

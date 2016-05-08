@@ -49,9 +49,12 @@ namespace PCore
 
 			enum class StorageType
 			{
-				Disk,		//! Disk drive.
-				Tape,		//! Tape drive.
-				Floppy,		//! Floppy disk drive.
+				FixedDisk,		//! Disk drive.
+				ExternalDisk,	//! External hard disk
+				Tape,			//! Tape drive.
+				Floppy,			//! Floppy disk drive.
+				FlashDisk,		//! Flash disk
+				RemovableMedia,	//! Removable media
 				Unknown
 			};
 
@@ -108,6 +111,7 @@ namespace PCore
 			{
 				quint32	index;							//! Index of adapter.
 				QString	name;							//! Name of adapter.
+				QString model;							//! Model of device
 				QString	vendor;							//! Manufacturer of adapter.
 				QString	video_mode_desc;				//! Current video mode description.
 				quint32	memory_size;					//! Ram size.
@@ -150,6 +154,20 @@ namespace PCore
 			}; // StorageInformation
 
 
+			/*!
+			 * \brief Montor information
+			 */
+			struct MonitorInformation
+			{
+				quint32	index;					//! Index of storage.
+				QString	name;					//! Name of storage.
+				QString model;					//! Model of device.
+				QString connected_to;			//! Video controler which is connected to.
+				quint32	screen_height;			//! Screen height
+				quint32	screen_width;			//! Screen width
+			};
+
+
 			//=====================================
 			// Public Methods
 			//=====================================
@@ -157,23 +175,30 @@ namespace PCore
 
 			/*!
 			 * \brief Retrieves information of all installed proccessors and return it.
-			 * \return information of all installed proccessors and return it.
+			 * \return information of all installed proccessors.
 			 */
 			static QList<ProcessorInformation> getProcesses( void );
 
 
 			/*!
 			 * \brief Retrieves information of all installed video controllers and return it.
-			 * \return information of all installed video controllers and return it.
+			 * \return information of all installed video controllers.
 			 */
 			static QList<VideoControllerInformation> getVideoControllers( void );
 
 
 			/*!
 			 * \brief Retrieves information of all installed storages and return it.
-			 * \return information of all installed storages and return it.
+			 * \return information of all installed storages.
 			 */
-			static QList<StorageInformation> getSorageInformation( void );
+			static QList<StorageInformation> getStorages( void );
+
+
+			/*!
+			 * \brief Retrieves a list of monitors.
+			 * \return information of all connected monitors.
+			 */
+			static QList<MonitorInformation> getMonitors( void );
 
 		}; // System Information
 	} // core

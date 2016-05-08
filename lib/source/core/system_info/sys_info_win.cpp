@@ -327,6 +327,39 @@ BOOL GetDriveGeometry( LPWSTR wszPath, DISK_GEOMETRY *pdg )
 
 
 
+/*!
+ * \brief Returns type of interface by given string
+ * \param _str: name of interface
+ */
+PCore::core::SystemInformation::InterfaceType get_interface ( const QString& _str)
+{
+	if ( _str == "SCSI" )
+	{
+		return PCore::core::SystemInformation::InterfaceType::SCSI;
+	}
+	else if ( _str == "HDC" )
+	{
+		return PCore::core::SystemInformation::InterfaceType::HDC;
+	}
+	else if ( _str == "IDE" )
+	{
+		return PCore::core::SystemInformation::InterfaceType::IDE;
+	}
+	else if ( _str == "USB" )
+	{
+		return PCore::core::SystemInformation::InterfaceType::USB;
+	}
+	else if ( _str == "1394" )
+	{
+		return PCore::core::SystemInformation::InterfaceType::_1394;
+	}
+	else
+	{
+		PCORE_LOG_INFO( "New interface type for windows: " + _str );
+		return PCore::core::SystemInformation::InterfaceType::Unknown;
+	}
+} // get_interface
+
 
 //==============================================================================
 // classes
@@ -440,6 +473,7 @@ namespace PCore
 				VideoControllerInformation info;
 				info.index = index;
 				info.name = wmi.getString( "Name" );
+				info.model = wmi.getString( "VideoProcessor" );
 				info.vendor = wmi.getString( "AdapterCompatibility" );
 				info.video_mode_desc = wmi.getString( "VideoModeDescription" );
 				info.memory_size = wmi.getInt( "AdapterRAM" );
@@ -461,10 +495,10 @@ namespace PCore
 
 
 		//==============================================================================
-		// getSorageInformation
+		// getStorages
 		//==============================================================================
 		QList<SystemInformation::StorageInformation>
-									SystemInformation::getSorageInformation()
+									SystemInformation::getStorages()
 		{
 			PCore::core::windows::WMI wmi;
 			QList<StorageInformation> list;
@@ -474,8 +508,6 @@ namespace PCore
 			{
 				while ( wmi.nextItem() == true )
 				{
-					bool	is_random_access;		 //! Is a random access device.
-
 					StorageInformation info;
 					info.index = index;
 					info.name = wmi.getString( "Name" );
@@ -490,6 +522,7 @@ namespace PCore
 					info.tracks_per_cylinder = wmi.getInt( "TracksPerCylinder" );
 					info.sectors_per_track = wmi.getInt( "SectorsPerTrack" );
 					info.bytes_per_sector = wmi.getInt( "BytesPerSector" );
+					info.interface_type = get_interface( wmi.getString( "InterfaceType" ) );
 
 
 					DISK_GEOMETRY pdg = { 0 };
@@ -512,34 +545,36 @@ namespace PCore
 					if ( cap.indexOf( 7 ) >= 0 ) info.is_removeable = true;
 					if ( cap.indexOf( 2 ) >= 0 ) info.is_sequential = true;
 
-					QString interfac = wmi.getString( "InterfaceType" );
+					QString media_type =  wmi.getString( "MediaType" );
 
-					if ( interfac == "SCSI" )
+					if ( media_type == "External hard disk media" )
 					{
-						info.interface_type = InterfaceType::SCSI;
+						info.type = StorageType::ExternalDisk;
 					}
-					else if ( interfac == "HDC" )
+					else if ( media_type == "Fixed hard disk media" )
 					{
-						info.interface_type = InterfaceType::HDC;
+						info.type = StorageType::FixedDisk;
 					}
-					else if ( interfac == "IDE" )
+					else if ( media_type == "Removable media" )
 					{
-						info.interface_type = InterfaceType::IDE;
+						if ( info.interface_type == InterfaceType::USB )
+						{
+							info.type = StorageType::FlashDisk;
+						}
+						else
+						{
+							info.type = StorageType::RemovableMedia;
+						}
 					}
-					else if ( interfac == "USB" )
+					else if ( media_type == "Unknown" )
 					{
-						info.interface_type = InterfaceType::USB;
-					}
-					else if ( interfac == "1394" )
-					{
-						info.interface_type = InterfaceType::_1394;
+						info.type = StorageType::Unknown;
 					}
 					else
 					{
-						PCORE_LOG_INFO( "New interface type for windows: " + interfac );
-						info.interface_type = InterfaceType::Unknown;
+						PCORE_LOG_INFO( "New media type for windows: " + media_type );
+						info.type = StorageType::Unknown;
 					}
-
 
 					index++;
 					list.push_back( info );
@@ -550,11 +585,113 @@ namespace PCore
 				PCORE_LOG_ERROR("Retrieveing disk informations failed." );
 				return QList<StorageInformation>();
 			}
+/*
+			//----------------------
+			// floppy
+			//----------------------
+			if ( wmi.selectAll("Win32_FloppyDrive") == true )
+			{
+				while ( wmi.nextItem() == true )
+				{
+					StorageInformation info;
+					info.index = index;
+					info.name = wmi.getString( "Name" );
+					info.model = "Floppy drive";
+					info.vendor = wmi.getString( "Manufacturer" );
+					info.serial = "";
+					info.signature = "";
+					info.capacity = 0;
+					info.num_of_partitions = 0;
+					info.heads = 0;
+					info.cylinders = wmi.getLongInt( "TotalCylinders" );
+					info.tracks_per_cylinder = wmi.getInt( "TracksPerCylinder" );
+					info.sectors_per_track = wmi.getInt( "SectorsPerTrack" );
+					info.bytes_per_sector = wmi.getInt( "BytesPerSector" );
+					info.interface_type = InterfaceType::IDE;
+					info.type = StorageType::Floppy;
+					DISK_GEOMETRY pdg = { 0 };
+					if ( GetDriveGeometry( (LPWSTR)info.name.toStdWString().data(), &pdg ) )
+					{
+						info.cylinders = pdg.Cylinders.QuadPart;
+						info.bytes_per_sector = pdg.BytesPerSector;
+						info.sectors_per_track = pdg.SectorsPerTrack;
+						info.tracks_per_cylinder =  pdg.TracksPerCylinder;
+						info.capacity = pdg.Cylinders.QuadPart *
+										pdg.BytesPerSector *
+										pdg.SectorsPerTrack *
+										pdg.TracksPerCylinder;
+					}
 
+					info.is_random_access = true;
+					info.is_writable = true;
+					info.is_removeable = true;
+					info.is_sequential = false;
 
+					index++;
+					list.push_back( info );
+				} // while
+			}
+			else
+			{
+				PCORE_LOG_ERROR("Retrieveing floppy informations failed." );
+				return QList<StorageInformation>();
+			}
+
+*/
 
 			return list;
-		} // getSorageInformation
+		} // getStorages
+
+
+		//==============================================================================
+		// getMonitors
+		//==============================================================================
+		QList<SystemInformation::MonitorInformation> SystemInformation::getMonitors()
+		{
+			DISPLAY_DEVICE adapter = {0};
+			QList<MonitorInformation> list;
+			DWORD index_adapter = 0;
+			int index_general = 0;
+
+			adapter.cb = sizeof( DISPLAY_DEVICE );
+
+			while( EnumDisplayDevicesW( NULL, index_adapter, &adapter, 0 ) )
+			{
+				DWORD index_monitor = 0;
+				DISPLAY_DEVICE monitor = {0};
+				monitor.cb = sizeof( DISPLAY_DEVICE );
+
+				while ( EnumDisplayDevicesW( adapter.DeviceName,
+											 index_monitor, &monitor, 0 ) )
+				{
+					MonitorInformation info;
+					info.index = index_general++;
+					info.name = QString::fromWCharArray( monitor.DeviceName );
+					info.connected_to = QString::fromWCharArray( adapter.DeviceName );
+					info.model = QString::fromWCharArray( monitor.DeviceString );
+
+					DEVMODE mode;
+					mode.dmSize = sizeof( DEVMODE );
+					if ( EnumDisplaySettingsW( adapter.DeviceName,
+										ENUM_CURRENT_SETTINGS, &mode) != false )
+					{
+						info.screen_height = mode.dmPelsHeight;
+						info.screen_width = mode.dmPelsWidth;
+					}
+					list.push_back( info );
+
+					ZeroMemory( &monitor, sizeof(DISPLAY_DEVICE) );
+					monitor.cb = sizeof( DISPLAY_DEVICE );
+					index_monitor++;
+				} // while monitor
+
+				ZeroMemory( &adapter, sizeof(DISPLAY_DEVICE) );
+				adapter.cb = sizeof( DISPLAY_DEVICE );
+				index_adapter++;
+			} // while adapter
+
+			return list;
+		} // getMonitors
 
 	} // core
 } // PCore
