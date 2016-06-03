@@ -17,16 +17,19 @@ public:
 
 private:
 	//! fills process table
-	void fillProcessTable();
+	void fillProcessTable( void );
 
 	//! fills video controller's table
-	void fillVideoControllerTable();
+	void fillVideoControllerTable( void );
 
 	//! fills storages table
-	void fillStorageTable();
+	void fillStorageTable( void );
 
 	//! monitros
-	void fillMonitors( );
+	void fillMonitors( void );
+
+	//! sound cards
+	void fillSoundCards( void );
 
 private:
 	Ui::MainWindow *ui;

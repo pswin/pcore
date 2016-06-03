@@ -16,21 +16,32 @@ namespace PCore
 	namespace core
 	{
 		class PCORE_API Crypto
-		{
+		{			
 			//=====================================
 			// enums
 			//=====================================
 		public:
 			enum class AESBits
 			{
-				_128,
-				_256
+				_128 = 128,
+				_192 = 192,
+				_256 = 256
 			};
+
+			//=====================================
+			// public members
+			//=====================================
+		public:
+
+			static QByteArray Default_AES_IVEC;
+			static QByteArray Default_DES_IVEC;
+
 
 			//=====================================
 			// public methods
 			//=====================================
 		public:
+
 
 			/*!
 			 * \brief Encrypts given array to AES coded array
@@ -39,22 +50,11 @@ namespace PCore
 			 * \param _bits: Bits
 			 * \return encrypted array
 			 */
-			static QByteArray aesEncrypt(	const QByteArray& _src,
-											const QString& _key,
-											AESBits _bits = AESBits::_128
+			static QByteArray aesEncrypt(const QByteArray& _src,
+											const QByteArray& _key,
+											QByteArray *iv = &Crypto::Default_AES_IVEC,
+											AESBits _bits = AESBits::_256
 										);
-
-			/*!
-			 * \brief Encrypts given string to AES coded string
-			 * \param _src: Source string
-			 * \param _key: Key
-			 * \param _bits: Bits
-			 * \return encrypted string
-			 */
-			static QString aesEncrypt(	const QString& _src,
-										const QString& _key,
-										AESBits _bits = AESBits::_128
-									);
 
 
 			/*!
@@ -64,22 +64,35 @@ namespace PCore
 			 * \param _bits: Bits
 			 * \return decrypted array
 			 */
-			static QByteArray aesDecrypt( const QByteArray& _src,
-										  const QString& _key,
-										  AESBits _bits = AESBits::_128
+			static QByteArray aesDecrypt(const QByteArray& _src,
+										 const QByteArray &_key,
+										 const QByteArray *iv = &Crypto::Default_AES_IVEC,
+										 AESBits _bits = AESBits::_256
 										);
 
+
 			/*!
-			 * \brief Encrypts given string to AES coded string
-			 * \param _src: Source string
-			 * \param _key: Key
-			 * \param _bits: Bits
-			 * \return decrypted string
+			 * \brief Encrypts given array to DES coded array.
+			 * \param _src:	Source array.
+			 * \param _key: Encryption key.
+			 * \return Encoded array.
 			 */
-			static QString aesDecrypt( const QString &_src,
-									   const QString &_key,
-									   AESBits _bits
-									   );
+			static QByteArray desEncrypt(const QByteArray& _src,
+										 const QByteArray& _key,
+										 QByteArray &_ivec = Crypto::Default_DES_IVEC
+										);
+
+
+			/*!
+			 * \brief Decrypts given array from DES coded array.
+			 * \param _src:	Source array.
+			 * \param _key: Decryption key.
+			 * \return decoded array.
+			 */
+			static QByteArray desDecrypt(const QByteArray& _src,
+										 const QByteArray& _key,
+										 const QByteArray& _ivec = Crypto::Default_DES_IVEC
+										);
 
 		}; // Crypto
 	} // core

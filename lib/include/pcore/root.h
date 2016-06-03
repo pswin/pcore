@@ -7,12 +7,22 @@
 #ifndef _PCORE_ROOT
 #define _PCORE_ROOT
 
+//==============================================================================
+// Includes
+//==============================================================================
+
 #include "pcore_def.h"
 #include "globals.h"
 #include "config.h"
 #include <QObject>
 #include <QString>
-#include <QVersionNumber>
+
+
+//==============================================================================
+// Defines
+//==============================================================================
+
+class QVersionNumber;
 
 
 //==============================================================================
@@ -23,7 +33,7 @@
 
 
 //==============================================================================
-// Class
+// Root
 //==============================================================================
 namespace PCore
 {
@@ -46,12 +56,13 @@ namespace PCore
 								= PCORE_CONFIG_DEFAULT_SETTING_FILE );
 
 
-		/*!
-		 * \brief Returns version number of PCore.
-		 * \return Version number of PCore.
-		 */
-		QVersionNumber getVersionNumber( void ) const;
-
+		#if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
+			/*!
+			 * \brief Returns version number of PCore.
+			 * \return Version number of PCore.
+			 */
+			QVersionNumber getVersionNumber( void ) const;
+		#endif // Qt 5.6
 
 		/*!
 		 * \brief Returns version of PCore in string.

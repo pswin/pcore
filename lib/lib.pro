@@ -14,6 +14,13 @@ QT       -= gui
 
 
 #===============================================================================
+# Configs
+#===============================================================================
+
+CONFIG += C++11
+
+
+#===============================================================================
 # Target
 #===============================================================================
 
@@ -52,21 +59,20 @@ SOURCES += \
     source/core/logger.cpp \
     source/root.cpp \
     source/core/crypto.cpp \
-    source/core/crypto/crypto_aes.cpp \
-    source/core/hash/hash_city.cpp \
-    source/core/hash/hash_crc32.cpp \
-    source/core/hash/hash_md5.cpp \
-    source/core/hash/hash_sha1.cpp \
     source/core/logger/logger_file.cpp \
     source/core/logger/logger_qdebug.cpp \
-    source/core/hash.cpp \
     source/core/profiler.cpp \
     source/core/logger/logger_network.cpp \
     source/core/compressor.cpp \
     source/core/windows/win_wmi.cpp \
     source/core/system_info/sys_info_intel.cpp \
     source/core/system_info/sys_info_amd.cpp \
-    source/core/system_info/sys_info_win.cpp
+    source/core/system_info/sys_info_win.cpp \
+    source/core/system_info/sys_info_linux.cpp \
+    source/core/system_info/sys_info_global.cpp \
+    source/core/linux/udev.cpp \
+    source/globalization/persian_calendar.cpp \
+    source/globalization/date_parser.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -83,12 +89,6 @@ HEADERS +=\
     include/pcore/globals.h \
     include/pcore/root.h \
     include/pcore/core/crypto.h \
-    headers/core/crypto/crypto_aes.h \
-    headers/core/hash/hash_city.h \
-    headers/core/hash/hash_crc32.h \
-    headers/core/hash/hash_md5.h \
-    headers/core/hash/hash_sha1.h \
-    include/pcore/core/hash.h \
     include/pcore/core/profiler.h \
     headers/core/logger/logger_network.h \
     headers/core/logger/logger_dummy.h \
@@ -100,7 +100,11 @@ HEADERS +=\
     headers/core/windows/win_wmi.h \
     include/pcore/core/bit_operations.h \
     headers/core/arch/intel/sys_info/sys_info_intel.h \
-    headers/core/arch/amd/sys_info/sys_info_amd.h
+    headers/core/arch/amd/sys_info/sys_info_amd.h \
+    source/core/system_info/sys_info_global.h \
+    headers/core/linux/udev.h \
+    include/pcore/globalization/persian_calendar.h \
+    include/pcore/globalization/date_parser.h
 
 
 
@@ -115,6 +119,7 @@ DISTFILES += \
 #--------------------------------------
 # zlib
 #--------------------------------------
+
 win32:contains( QMAKE_HOST.arch, x86_64 ) {
     LIBS += -L$$PWD/3rdparty/zlib/bin_x64 -lzdll
 } else:win32 {
@@ -123,8 +128,38 @@ win32:contains( QMAKE_HOST.arch, x86_64 ) {
    LIBS += -lz
 }
 
-INCLUDEPATH += $$PWD/3rdparty/zlib/include
-DEPENDPATH += $$PWD/3rdparty/zlib/include
+win32: {
+    INCLUDEPATH += $$PWD/3rdparty/zlib/include
+    DEPENDPATH += $$PWD/3rdparty/zlib/include
+}
+
+
+#--------------------------------------
+# openssl
+#--------------------------------------
+
+
+win32:contains( QMAKE_HOST.arch, x86_64 ) {
+    LIBS += -L$$PWD/3rdparty/openssl/bin_x64 -llibeay32MD -lssleay32MD
+} else:win32 {
+   LIBS += -L$$PWD/3rdparty/openssl/bin_x86 -llibeay32MD -lssleay32MD
+} else:unix {
+  LIBS += -lssl -lcrypto
+}
+
+win32:contains( QMAKE_HOST.arch, x86_64 ) {
+    INCLUDEPATH += $$PWD/3rdparty/openssl/include64
+    DEPENDPATH += $$PWD/3rdparty/openssl/include64
+} else:win32 {
+    INCLUDEPATH += $$PWD/3rdparty/openssl/include
+    DEPENDPATH += $$PWD/3rdparty/openssl/include
+}
+
+
+#--------------------------------------
+# 7-Zip
+#--------------------------------------
+
 
 
 #--------------------------------------
@@ -132,3 +167,13 @@ DEPENDPATH += $$PWD/3rdparty/zlib/include
 #--------------------------------------
 
 win32: LIBS+= -lwbemuuid -lcomsupp
+
+
+#--------------------------------------
+# udev
+#--------------------------------------
+
+unix: {
+    LIBS += -ludev
+}
+

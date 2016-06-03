@@ -39,4 +39,4 @@
 #define PCORE_U8_MAX		( 0xff )
 
 
-#endif _PCORE_LIMITS_H
+#endif // _PCORE_LIMITS_H

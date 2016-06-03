@@ -26,13 +26,19 @@
 //=====================================
 
 #include "core/logger.h"
-#include "core/hash.h"
 #include "core/crypto.h"
 #include "core/profiler.h"
 #include "core/exception.h"
 #include "core/compressor.h"
 #include "core/system_information.h"
 
+
+//=====================================
+// globalization
+//=====================================
+
+#include "globalization/date_parser.h"
+#include "globalization/persian_calendar.h"
 
 
 #endif // _PCORE_H

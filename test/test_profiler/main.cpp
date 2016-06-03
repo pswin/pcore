@@ -17,7 +17,7 @@ void foo()
 	// profiling this function
 	PCORE_PROFILE_FUNCTION();
 
-	double res;
+	double res = 0;
 	for ( int i = 0; i < 999999999;  i++ )
 	{
 		res = res + sqrt( i );

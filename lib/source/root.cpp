@@ -10,6 +10,10 @@
 #include "include/pcore/core/profiler.h"
 #include <QSettings>
 
+#if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
+	#include <QVersionNumber>
+#endif
+
 
 namespace PCore
 {
@@ -43,14 +47,16 @@ namespace PCore
 		return PCORE_VERSION_NAME;
 	}
 
-	//! getVersionNumber
-	QVersionNumber Root::getVersionNumber( void ) const
-	{
-		return QVersionNumber(	PCORE_VERSION_MAJOR,
-								PCORE_VERSION_MINOR,
-								PCORE_VERSION_PATCH
-							);
-	}
+	#if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
+		//! getVersionNumber
+		QVersionNumber Root::getVersionNumber( void ) const
+		{
+			return QVersionNumber(	PCORE_VERSION_MAJOR,
+									PCORE_VERSION_MINOR,
+									PCORE_VERSION_PATCH
+								);
+		}
+	#endif // QT 5.6
 
 } // PCore
 

@@ -5,7 +5,7 @@
 //##############################################################################
 
 #include <pcore/pcore.h>
-#include <qDebug>
+#include <qdebug.h>
 
 int main()
 {

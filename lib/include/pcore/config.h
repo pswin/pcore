@@ -81,7 +81,7 @@
 #define PCORE_CONFIG_LOG_ERROR_DEBUG		PCORE_ENABLE
 #define PCORE_CONFIG_LOG_WARNING_DEBUG		PCORE_ENABLE
 #define PCORE_CONFIG_LOG_INFO_DEBUG			PCORE_ENABLE
-#define PCORE_CONFIG_LOG_TRACE_DEBUG		PCORE_ENABLE
+#define PCORE_CONFIG_LOG_TRACE_DEBUG		PCORE_DISABLE
 
 /*
  * Enabling or disabling diffrent loggers in release mode.
@@ -90,7 +90,7 @@
 #define PCORE_CONFIG_LOG_ERROR_RELEASE		PCORE_ENABLE
 #define PCORE_CONFIG_LOG_WARNING_RELEASE	PCORE_ENABLE
 #define PCORE_CONFIG_LOG_INFO_RELEASE		PCORE_ENABLE
-#define PCORE_CONFIG_LOG_TRACE_RELEASE		PCORE_ENABLE
+#define PCORE_CONFIG_LOG_TRACE_RELEASE		PCORE_DISABLE
 
 /*
  *	This configuration is for tracing methods execution in case of absence of
@@ -108,5 +108,11 @@
 #define PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_HOST	QHostAddress::LocalHost
 #define PCORE_CONFIG_LOGGER_NETWORK_DEFAULT_WAIT_TIME 30000 // 30 sec
 
+
+/*=====================================
+	Date and time
+=====================================*/
+
+#define PCORE_CONFIG_DATE_PERSIAN_DEFAULT_FORMAT "yyyy/mm/dd"
 
 #endif // _PCORE_CONFIG_H

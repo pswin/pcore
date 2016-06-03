@@ -6,6 +6,7 @@
 int main(int argc, char *argv[])
 {
 	PCORE_INIT();
+
 	QApplication a(argc, argv);
 	MainWindow w;
 	w.show();

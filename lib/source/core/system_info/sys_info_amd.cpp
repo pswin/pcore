@@ -165,8 +165,8 @@ AMDCPUIDInformation get_amd_cpuid_info( void )
 	// L1
 	__cpuid( (int *)regs, 0x80000005 );
 
-	info.cache_l1_size_data = PCORE_BIT_READ( regs[2], 24, 8 );
-	info.cache_l1_size_instruction = PCORE_BIT_READ( regs[3], 24, 8 );
+	info.cache_l1_size_data = PCORE_BIT_READ( regs[2], 24, 8 ) * 1024;
+	info.cache_l1_size_instruction = PCORE_BIT_READ( regs[3], 24, 8 ) * 1024;
 	info.cache_l1_size = info.cache_l1_size_instruction + info.cache_l1_size_data;
 
 

@@ -9,7 +9,7 @@
  */
 
 #include <pcore/pcore.h>
-#include <qDebug>
+#include <QDebug>
 #include <QByteArray>
 #include <QFile>
 

@@ -7,6 +7,10 @@
 #ifndef _PCORE_LOGGR_H
 #define _PCORE_LOGGR_H
 
+//==============================================================================
+// Includes
+//==============================================================================
+
 #include <QString>
 #include <QMap>
 #include <QVariant>
@@ -19,14 +23,13 @@
 // Macros
 //==============================================================================
 
-
-#define __PCORE_LOG_MESSAGE_HELPER( __msg, __type ) pLogger->log( \
-			PCore::core::LogMessage( QString(__msg), PCORE_FILE_NAME , \
+#define __PCORE_LOG_MESSAGE_HELPER( __msg, __type ) pLogger->log ( \
+			 PCore::core::LogMessage( QString(__msg), PCORE_FILE_NAME , \
 					PCORE_FUNC_NAME, PCORE_LINE_NUMBER, __type ) );
 
 // critical
 #if ( (PCORE_CONFIG_LOG_CRITICAL_RELEASE == PCORE_ENABLE) \
-		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+		&& PCORE_DEBUG_MODE == PCORE_DISABLE ) || \
 	( (PCORE_CONFIG_LOG_CRITICAL_DEBUG == PCORE_ENABLE) \
 		&& PCORE_DEBUG_MODE == PCORE_TRUE )
 	#define PCORE_LOG_CRITICAL( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Critical )
@@ -36,7 +39,7 @@
 
 // error
 #if ( (PCORE_CONFIG_LOG_ERROR_RELEASE == PCORE_ENABLE) \
-		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+		&& PCORE_DEBUG_MODE == PCORE_DISABLE ) || \
 	( (PCORE_CONFIG_LOG_ERROR_DEBUG == PCORE_ENABLE) \
 		&& PCORE_DEBUG_MODE == PCORE_TRUE )
 	#define PCORE_LOG_ERROR( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Error )
@@ -46,7 +49,7 @@
 
 // warning
 #if ( (PCORE_CONFIG_LOG_WARNING_RELEASE == PCORE_ENABLE) \
-		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+		&& PCORE_DEBUG_MODE == PCORE_DISABLE ) || \
 	( (PCORE_CONFIG_LOG_WARNING_DEBUG == PCORE_ENABLE) \
 		&& PCORE_DEBUG_MODE == PCORE_TRUE )
 	#define PCORE_LOG_WARNING( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Warning )
@@ -56,7 +59,7 @@
 
 // info
 #if ( (PCORE_CONFIG_LOG_INFO_RELEASE == PCORE_ENABLE) \
-		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+		&& PCORE_DEBUG_MODE == PCORE_DISABLE ) || \
 	( (PCORE_CONFIG_LOG_INFO_DEBUG == PCORE_ENABLE) \
 		&& PCORE_DEBUG_MODE == PCORE_TRUE )
 	#define PCORE_LOG_INFO( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Information )
@@ -66,7 +69,7 @@
 
 //! trace
 #if ( (PCORE_CONFIG_LOG_TRACE_RELEASE == PCORE_ENABLE) \
-		&& PCORE_DEBUG_MODE == PCORE_FALSE ) || \
+		&& PCORE_DEBUG_MODE == PCORE_DISABLE ) || \
 	( (PCORE_CONFIG_LOG_TRACE_DEBUG == PCORE_ENABLE) \
 		&& PCORE_DEBUG_MODE == PCORE_TRUE )
 	#define PCORE_LOG_TRACE( __msg ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::Trace )
@@ -91,6 +94,9 @@
 #define PCORE_LOG_CORE_ERROR( __msg  ) __PCORE_LOG_MESSAGE_HELPER( __msg, PLogMessage::Type::CoreError );
 
 
+//==============================================================================
+// Classes
+//==============================================================================
 
 namespace PCore
 {
@@ -443,6 +449,7 @@ namespace PCore
 	using PLogMessage		= PCore::core::LogMessage;
 	using PLoggerInterface	= PCore::core::LoggerInterface;
 #endif
+
 
 #endif // _PCORE_LOGGR_H
 

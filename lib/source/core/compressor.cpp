@@ -78,7 +78,7 @@ namespace PCore
 
 				ret = deflate( &zs, Z_FINISH );
 
-				if ( out.size() < zs.total_out )
+				if ( (uLong)out.size() < zs.total_out )
 				{
 					out.append( out_buf, zs.total_out - out.size() );
 				}
@@ -204,7 +204,7 @@ namespace PCore
 
 				ret = inflate( &zs, 0 );
 
-				if ( out.size() < zs.total_out )
+				if ( (uLong)out.size() < zs.total_out )
 				{
 					out.append( out_buf, zs.total_out - out.size() );
 				}
