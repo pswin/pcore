@@ -37,6 +37,7 @@
 // globalization
 //=====================================
 
+#include "globalization/locale.h"
 #include "globalization/date_parser.h"
 #include "globalization/persian_calendar.h"
 

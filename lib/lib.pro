@@ -72,7 +72,8 @@ SOURCES += \
     source/core/system_info/sys_info_global.cpp \
     source/core/linux/udev.cpp \
     source/globalization/persian_calendar.cpp \
-    source/globalization/date_parser.cpp
+    source/globalization/date_parser.cpp \
+    source/globalization/locale.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -104,7 +105,9 @@ HEADERS +=\
     source/core/system_info/sys_info_global.h \
     headers/core/linux/udev.h \
     include/pcore/globalization/persian_calendar.h \
-    include/pcore/globalization/date_parser.h
+    include/pcore/globalization/date_parser.h \
+    headers/globalization/info_structs.h \
+    include/pcore/globalization/locale.h
 
 
 
