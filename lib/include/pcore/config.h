@@ -114,5 +114,6 @@
 =====================================*/
 
 #define PCORE_CONFIG_DATE_PERSIAN_DEFAULT_FORMAT "yyyy/mm/dd"
+#define PCORE_CONFIG_DATE_HIJRI_DEFAULT_FORMAT "yyyy/mm/dd"
 
 #endif // _PCORE_CONFIG_H

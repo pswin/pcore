@@ -40,6 +40,7 @@
 #include "globalization/locale.h"
 #include "globalization/date_parser.h"
 #include "globalization/persian_calendar.h"
+#include "globalization/hijri_calendar.h"
 
 
 #endif // _PCORE_H
