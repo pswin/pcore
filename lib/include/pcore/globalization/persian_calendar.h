@@ -39,7 +39,7 @@ namespace PCore
 		public:
 
 			//! default constructor
-			constexpr PersianCalendar( );
+			PersianCalendar( );
 
 
 			/*!
@@ -207,15 +207,6 @@ namespace PCore
 
 
 			/*!
-			 * \brief Returns the week number (1 to 53), and stores the year in
-			 *			_year unless _year is null.
-			 */
-			inline int weekNumber( int* _year = nullptr ) const;
-			inline int getWeekNumber( int* _year = nullptr ) const
-										{ return weekNumber( _year ); }
-
-
-			/*!
 			 * \brief Returns the year of this date.
 			 */
 			inline int year( void ) const { return m_iYear; }
@@ -291,7 +282,7 @@ namespace PCore
 			 * \param _day: Julian day.
 			 * \return A PersianCalendar object from specified Julian date.
 			 */
-			static PersianCalendar fromJulianDay( qint64 _day );
+			static PersianCalendar fromJulianDay(quint64 _day );
 
 
 			/*!
@@ -422,8 +413,6 @@ namespace PCore
 			bool	m_bIsNull	= true;
 			bool	m_bLeapYear = false;
 
-			bool checkValidity( void );
-			bool isCurrentYearALeapYear( void ) const;
 		}; // Persian Calendar
 	} // globalization
 } // PCre

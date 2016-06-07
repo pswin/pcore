@@ -266,7 +266,7 @@ namespace PCore
 			 * \param _day: Julian day.
 			 * \return A HijriCalendar object from specified Julian date.
 			 */
-			static HijriCalendar fromJulianDay( qint64 _day );
+			static HijriCalendar fromJulianDay( quint64 _day );
 
 
 			/*!

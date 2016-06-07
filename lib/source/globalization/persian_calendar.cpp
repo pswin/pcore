@@ -78,7 +78,7 @@ namespace PCore
 		//======================================================================
 
 		//! constructor
-		constexpr PersianCalendar::PersianCalendar()
+		PersianCalendar::PersianCalendar()
 		{
 
 		}
@@ -92,7 +92,7 @@ namespace PCore
 
 
 		//! copy-constructor
-		PersianCalendar::PersianCalendar(const PersianCalendar &_date)
+		PersianCalendar::PersianCalendar( const PersianCalendar &_date )
 		{
 			setDate( _date.m_iYear, _date.m_iMonth, _date.m_iDay );
 		}
@@ -101,45 +101,26 @@ namespace PCore
 		//! addDay
 		PersianCalendar PersianCalendar::addDays( qint64 _num_of_days ) const
 		{
-			qint64 d = _num_of_days + m_iDay;
-			int m = m_iMonth;
-			int y = m_iYear;
-
-			int days_num = day_per_month[ m ];
-			if ( isLeapYear( y ) ) days_num = day_per_month[ m ];
-
-			while ( d > days_num )
-			{
-				m++;
-				d -= days_num;
-				if ( m > 12 )
-				{
-					y++;
-					m++;
-				}
-
-				days_num = day_per_month[ m ];
-				if ( isLeapYear( y ) ) days_num = day_per_month_leap[ m ];
-			}
-
-			return PersianCalendar( y, m, d );
-
+			return PersianCalendar::fromJulianDay( toJulianDay() + _num_of_days );
 		} // addDays
 
 
-		// addMonths
+		//! addMonths
 		PersianCalendar PersianCalendar::addMonths( int _num_of_months ) const
 		{
-			int y = (_num_of_months + m_iMonth / 12) + m_iYear;
-			int m = _num_of_months + m_iMonth % 12;
+			if ( m_bIsValid == false ) return PersianCalendar();
 
-			return PersianCalendar( y, m , m_iDay );
+			int y = (  ( _num_of_months + m_iMonth - 1 ) / 12 ) + m_iYear;
+			int m = ( _num_of_months + m_iMonth - 1 ) % 12;
+
+			return PersianCalendar( y, m + 1 , m_iDay );
 		} // addMonths
 
 
 		//! addYears
 		PersianCalendar PersianCalendar::addYears( int _num_of_years ) const
 		{
+			if ( m_bIsValid == false ) return PersianCalendar();
 			return PersianCalendar( _num_of_years + m_iYear, m_iMonth, m_iDay );
 		} // addYears
 
@@ -160,25 +141,25 @@ namespace PCore
 		//! dayOfWeek
 		int PersianCalendar::dayOfWeek( void ) const
 		{
-			return QDate::fromJulianDay( toJulianDay() + 2 ).dayOfWeek();
+			if ( m_bIsValid == false ) return -1;
+			return ( ( toJulianDay() + 2 ) % 7 ) + 1;
 		}
 
 
 		//! dayOfYear
 		int PersianCalendar::dayOfYear( void ) const
 		{
-			int p2 = ( m_iMonth -1 ) % 6 * (m_iMonth%1);
-			int p1 = ( m_iMonth -1 ) - p2;
-			return ( p2 *30 ) + ( p1 * 31 ) + m_iDay;
+			if ( m_bIsValid == false ) return -1;
+			return toJulianDay() - persian_to_julian( m_iYear ) + 1;
 		} // dayOfYear
 
 
 		// dayInMonth
 		int PersianCalendar::daysInMonth( int _month ) const
 		{
-			if ( (_month > 12) || (_month < 1) ) return 0;
+			if ( ( _month > 12 ) || ( _month < 1 ) ) return 0;
 
-			if ( isCurrentYearALeapYear() == true )
+			if ( m_bIsValid == true )
 			{
 				return day_per_month_leap[ _month - 1 ];
 			}
@@ -192,7 +173,8 @@ namespace PCore
 		// daysInYear
 		int PersianCalendar::daysInYear( void ) const
 		{
-			if ( isCurrentYearALeapYear() == true )
+			if ( m_bIsValid == false ) return -1;
+			if ( m_bLeapYear == true )
 			{
 				return 366;
 			}
@@ -206,6 +188,7 @@ namespace PCore
 		//! daysInYear
 		int PersianCalendar::daysInYear(const PersianCalendar& _date) const
 		{
+			if ( _date.isValid() == false ) return -1;
 			if ( isLeapYear( _date.year() ) )
 			{
 				return 366;
@@ -220,15 +203,17 @@ namespace PCore
 		//! getDate
 		void PersianCalendar::getDate( int *_year, int *_month, int *_day ) const
 		{
-			*_year = 0;
-			*_month = 0;
-			*_day = 0;
-
 			if ( isValid() == true )
 			{
-				*_year = m_iYear;
-				*_month = m_iMonth;
-				*_day = m_iDay;
+				if ( _year != nullptr ) *_year = m_iYear;
+				if ( _month != nullptr ) *_month = m_iMonth;
+				if ( _day != nullptr ) *_day = m_iDay;
+			}
+			else
+			{
+				if ( _year != nullptr ) *_year = 0;
+				if ( _month != nullptr ) *_month = 0;
+				if ( _day != nullptr ) *_day = 0;
 			}
 		} // getDate
 
@@ -247,10 +232,12 @@ namespace PCore
 			m_iMonth = _month;
 			m_iDay = _day;
 			m_bIsNull = false;
-			m_bIsValid = checkValidity();
+
+			m_bIsValid = PersianCalendar::isValid( _year, _month, _day );
 			if ( m_bIsValid )
 			{
 				m_lJulian = persian_to_julian( _year ) + dayOfYear();
+				m_bLeapYear = PersianCalendar::isLeapYear( m_iYear );
 			}
 			return m_bIsValid;
 		} // setDate
@@ -259,6 +246,7 @@ namespace PCore
 		//! toJulianDay
 		qint64 PersianCalendar::toJulianDay( void ) const
 		{
+			if ( m_bIsValid == false ) return 0;
 			return m_lJulian;
 		} // toJulianDay
 
@@ -266,6 +254,7 @@ namespace PCore
 		//! toString
 		QString PersianCalendar::toString( const QString &_format ) const
 		{
+			if ( m_bIsValid == false ) return nullptr;
 			DateParser d;
 			d.setLocale( QLocale::Persian, QLocale::Iran );
 			d.setFormat( _format );
@@ -273,26 +262,10 @@ namespace PCore
 		}
 
 
-		//! toString
-		QString PersianCalendar::toString( const Qt::DateFormat _format ) const
-		{
-			return QDate::fromJulianDay( toJulianDay() ).toString( _format );
-		}
-
-
 		//! toQDate
 		QDate PersianCalendar::toQDate( void ) const
 		{
 			return QDate::fromJulianDay( toJulianDay() );
-		}
-
-
-		//! weekNumber
-		int PersianCalendar::weekNumber( int *_year ) const
-		{
-			// TODO:
-			quint64 jd_start = persian_to_julian( m_iYear );
-			return (( toJulianDay() - jd_start)/7)+1;
 		}
 
 
@@ -312,38 +285,38 @@ namespace PCore
 		//! operator !=
 		bool PersianCalendar::operator !=( const PersianCalendar &_date )
 		{
-			return toJulianDay() != _date.toJulianDay();
+			return m_lJulian != _date.m_lJulian;
 		}
 
 		//! operator <
 		bool PersianCalendar::operator <( const PersianCalendar &_date )
 		{
-			return toJulianDay() < _date.toJulianDay();
+			return m_lJulian < _date.m_lJulian;
 		}
 
 		//! operator <=
 		bool PersianCalendar::operator <=( const PersianCalendar &_date )
 		{
-			return toJulianDay() <= _date.toJulianDay();
+			return m_lJulian <= _date.m_lJulian;
 		}
 
 		//! operator ==
 		bool PersianCalendar::operator ==( const PersianCalendar &_date )
 		{
-			return toJulianDay() == _date.toJulianDay();
+			return m_lJulian == _date.m_lJulian;
 		}
 
 		//! operator >
 		bool PersianCalendar::operator >( const PersianCalendar &_date )
 		{
-			return toJulianDay() > _date.toJulianDay();
+			return m_lJulian > _date.m_lJulian;
 		}
 
 		//! operator >=
 		bool PersianCalendar::operator >=( const PersianCalendar &_date )
 		{
 
-			return toJulianDay() >= _date.toJulianDay();
+			return m_lJulian >= _date.m_lJulian;
 		}
 
 
@@ -389,7 +362,7 @@ namespace PCore
 
 
 		//! fromJulianDay
-		PersianCalendar PersianCalendar::fromJulianDay( qint64 _day )
+		PersianCalendar PersianCalendar::fromJulianDay( quint64 _day )
 		{
 			int year_ends[2];
 			int curr_jd;
@@ -449,17 +422,6 @@ namespace PCore
 
 		//! fromString
 		PersianCalendar PersianCalendar::fromString(
-													const QString &_date,
-													const Qt::DateFormat _format
-												)
-		{
-			return PersianCalendar::fromJulianDay(
-						QDate::fromString( _date, _format ).toJulianDay() );
-		}
-
-
-		//! fromString
-		PersianCalendar PersianCalendar::fromString(
 												const QString &_date,
 												const QString &_format
 											)
@@ -489,10 +451,6 @@ namespace PCore
 		//! isLeapYear
 		bool PersianCalendar::isLeapYear( int _year )
 		{
-
-			//if ( leap_years[_year%33] == 1 ) return true;
-			//return false;
-
 			if ( _year == 0 ) return false;
 
 			double leap_days_0 = 0;
@@ -581,34 +539,6 @@ namespace PCore
 		QDate PersianCalendar::toGregorian(const PersianCalendar &_date)
 		{
 			return QDate::fromJulianDay( _date.toJulianDay() );
-		}
-
-
-		//======================================================================
-		// private methods
-		//======================================================================
-
-		//! checkValidity
-		bool PersianCalendar::checkValidity()
-		{
-			if ( ( m_iMonth > 12) || (m_iMonth < 1) ) return false;
-
-			if ( isLeapYear( m_iYear ) == true )
-			{
-				if ( m_iDay > day_per_month_leap[m_iMonth-1] ) return false;
-			}
-			else
-			{
-				if ( m_iDay > day_per_month[m_iMonth-1] ) return false;
-			}
-			return true;
-		}
-
-
-		//! isCurrentYearALeapYear
-		bool PersianCalendar::isCurrentYearALeapYear() const
-		{
-			return m_bLeapYear;
 		}
 
 	} // globalization

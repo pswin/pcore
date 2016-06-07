@@ -85,6 +85,8 @@ namespace PCore
 		//! addMonths
 		HijriCalendar HijriCalendar::addMonths( int _num_of_months ) const
 		{
+			if ( m_bIsValid == false ) return HijriCalendar();
+
 			int m = ( m_iMonth + _num_of_months - 1 ) % 12;
 			int y = ( m_iMonth + _num_of_months - 1 ) / 12;
 
@@ -95,6 +97,7 @@ namespace PCore
 		//! addYears
 		HijriCalendar HijriCalendar::addYears( int _num_of_years ) const
 		{
+						if ( m_bIsValid == false ) return HijriCalendar();
 			return HijriCalendar( m_iYear + _num_of_years, m_iMonth, m_iDay );
 		}
 
@@ -127,6 +130,7 @@ namespace PCore
 		//! daysInYear
 		int HijriCalendar::daysInYear( void ) const
 		{
+			if ( m_bIsValid == false ) return -1;
 			if ( m_bLeapYear == true ) return 355;
 			return 354;
 		}
@@ -135,32 +139,43 @@ namespace PCore
 		//! getDate
 		void HijriCalendar::getDate( int* _year, int* _month, int* _day ) const
 		{
-			if ( _year != nullptr ) *_year = m_iYear;
-			if ( _month != nullptr ) *_month = m_iMonth;
-			if ( _day != nullptr ) *_day = m_iDay;
+			if ( m_bIsValid == true )
+			{
+				if ( _year != nullptr ) *_year = m_iYear;
+				if ( _month != nullptr ) *_month = m_iMonth;
+				if ( _day != nullptr ) *_day = m_iDay;
+			}
+			else
+			{
+				if ( _year != nullptr ) *_year = 0;
+				if ( _month != nullptr ) *_month = 0;
+				if ( _day != nullptr ) *_day = 0;
+			}
 		}
 
 
 		//! setDate
 		bool HijriCalendar::setDate( int _year, int _month, int _day )
 		{
-			if ( isValid( _year, _month, _day ) == false ) return false;
-
 			m_iYear = _year;
 			m_iMonth = _month;
 			m_iDay = _day;
 			m_bIsNull = false;
-			m_lJulian = hijri_to_julian_day( _year, _month, _day );
-			m_bLeapYear = isLeapYear( m_iYear );
-			m_bIsValid = true;
+			m_bIsValid =  isValid( _year, _month, _day );
+			if ( m_bIsValid == true )
+			{
+				m_lJulian = hijri_to_julian_day( _year, _month, _day );
+				m_bLeapYear = isLeapYear( m_iYear );
+			}
 
-			return true;
+			return m_bIsValid;
 		}
 
 
 		//! toJulianDay
 		qint64 HijriCalendar::toJulianDay( void ) const
 		{
+			if ( m_bIsValid == false ) return 0;
 			return m_lJulian;
 		}
 
@@ -234,7 +249,7 @@ namespace PCore
 
 
 		// fromJulianDay
-		HijriCalendar HijriCalendar::fromJulianDay( qint64 _day )
+		HijriCalendar HijriCalendar::fromJulianDay( quint64 _day )
 		{
 			int day = -1;
 			int month = -1;
