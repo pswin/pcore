@@ -97,12 +97,13 @@ namespace PCore
 
 			/*!
 			 * \brief Converts given date to a string.
-			 * \param _year Year.
-			 * \param _month Month.
-			 * \param _day Day.
+			 * \param _year: Year.
+			 * \param _month: Month.
+			 * \param _day: Day.
+			 * \param _day_of_week: day number in the week
 			 * \return
 			 */
-			QString toString( int _year, int _month, int _day );
+			QString toString( int _year, int _month, int _day , int _day_of_week  );
 
 
 			//=====================================

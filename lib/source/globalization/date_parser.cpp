@@ -9,6 +9,7 @@
 //==============================================================================
 
 #include "include/pcore/globalization/date_parser.h"
+#include "include/pcore/globalization/locale.h"
 #include <QString>
 #include <QList>
 #include <QRegExp>
@@ -33,98 +34,9 @@ const char* reg_format[] = {
 						};
 
 
-const char* months_name2[] = {
-								"فروردین",
-								"اردیبهشت",
-								"خرداد",
-								"تیر",
-								"مرداد",
-								"شهریور",
-								"مهر",
-								"آبان",
-								"آذر",
-								"دی",
-								"بهمن",
-								"اسفند"};
-
-
-const char* days_name2[] = { "شنبه",
-							   "یکشنبه",
-							   "دوشنبه",
-							   "سه شنبه",
-							   "چهارشنبه",
-							   "پنج شنبه",
-							   "جمعه" };
-
-const char* days_name_short2[] = { "ش",
-							   "ی",
-							   "د",
-							   "س",
-							   "چ",
-							   "پ",
-							   "ج" };
-
-
 //==============================================================================
-// functions
+// Functions
 //==============================================================================
-
-/* TODO: This functions must be replaced. */
-
-
-/*!
- * \brief Returns month name.
- * \param _month Month.
- * \param _full  Is returning name abbrivated or full?
- * \param _lang  Language.
- * \param _country Countery.
- */
-PCORE_FORCE_INLINE QString monthName( int _month,
-									  bool _full ,
-									  QLocale::Language _lang,
-									  QLocale::Country _country )
-{
-	if ( (_month < 1) || (_month > 12) ) return "INV";
-
-	if ( _lang = QLocale::Persian )
-	{
-		return months_name2[_month];
-	}
-
-	return "";
-}
-
-
-/*!
- * \brief Returns day name.
- * \param _day Day in number.
- * \param _full  Is returning name abbrivated or full?
- * \param _lang  Language.
- * \param _country Countery.
- */
-PCORE_FORCE_INLINE QString dayName( int _day,
-									  bool _full ,
-									  QLocale::Language _lang,
-									  QLocale::Country _country )
-{
-	if ( (_day < 1) || (_day > 7) ) return "INV";
-
-	if ( _lang = QLocale::Persian )
-	{
-		if ( _full = true )
-		{
-			return days_name2[_day];
-		}
-		else
-		{
-			return days_name_short2[_day];
-		}
-	}
-
-	return "";
-}
-
-
 
 /*!
  * \brief Counts number of repeated chars from given index in specified string.
@@ -149,63 +61,35 @@ PCORE_FORCE_INLINE int countRepeat( const QString& _str,
 } // countRepeat
 
 
-
 /*!
-  * \brief Returns the number of day from given name.
-  * \param _str: Name of the day.
-  * \param _lang: Language.
-  * \param _f_type: Type.
-  */
-PCORE_FORCE_INLINE int weekDay(
-							const QString& _str,
-							QLocale::Language _lang,
-							QLocale::FormatType _f_type )
+  Returns a calendar by given country and language
+*/
+PCORE_FORCE_INLINE PCore::globalization::Locale::Calendar
+					get_calendar( QLocale::Country _country,
+								QLocale::Language _language )
 {
+	PCore::globalization::Locale::Calendar
+					cal( PCore::globalization::Locale::Calendar::Type::Gregorian );
 
-
-	QLocale loc( _lang );
-	for ( int i = 1; i < 8 ; i++ )
+	switch ( _language )
 	{
-		if ( loc.standaloneDayName( i, _f_type ).toLower() == _str.toLower() )
-		{
-			return i;
-		}
-	}
-	return 0;
-}
-
-
-/*!
-  * \brief Returns the number of month from given month name.
-  * \param _str: Name of the month.
-  * \param _lang: Language.
-  * \param _f_type: Type.
-  */
-PCORE_FORCE_INLINE int monthFromName(
-							const QString& _str,
-							QLocale::Language _lang,
-							QLocale::FormatType _f_type )
-{
-
-
-	for ( int i = 0; i < 12 ; i++ )
-	{
-		if ( QString(months_name2[i]) == _str )
-		{
-			return i+1;
-		}
+		case QLocale::Persian:
+			if ( _country == QLocale::Afghanistan )
+			{
+				cal.setType( PCore::globalization::Locale::Calendar::Type::PersianAfghanistan );
+			}
+			else
+			{
+				cal.setType( PCore::globalization::Locale::Calendar::Type::PersianIran );
+			}
+			break;
+		case QLocale::Arabic:
+			cal.setType( PCore::globalization::Locale::Calendar::Type::Hijri );
+			break;
 	}
 
-	QLocale loc( "fa-ir" );
-	for ( int i = 1; i < 13 ; i++ )
-	{
-		if ( loc.monthName( i, _f_type ).toLower() == _str.toLower() )
-		{
-			return i;
-		}
-	}
-	return 0;
-} // monthFromName
+	return cal;
+} // get_calendar
 
 
 //==============================================================================
@@ -396,6 +280,7 @@ namespace PCore
 
 			int i = 1;
 			QStringList ls = r.capturedTexts();
+			Locale::Calendar cal = get_calendar( m_eCountry, m_eLanguage );
 
 			for( Node it : m_Nodes )
 			{
@@ -406,20 +291,16 @@ namespace PCore
 						d.day = r.cap( i++ ).toInt();
 						break;
 					case Node::Type::DayNameAbbreviated:
-						d.week_day = weekDay( r.cap(i++), m_eLanguage, QLocale::ShortFormat );
-						break;
 					case Node::Type::DayNameFull:
-						d.week_day = weekDay( r.cap(i++), m_eLanguage, QLocale::LongFormat );
+						d.week_day = (int)cal.dayNumberByName( r.cap(i++) );
 						break;
 					case Node::Type::Month:
 					case Node::Type::MonthLeadingZero:
 						d.month = r.cap( i++ ).toInt();
 						break;
 					case Node::Type::MonthNameAbbreviated:
-						d.month = monthFromName( r.cap(i++), m_eLanguage, QLocale::ShortFormat );
-						break;
 					case Node::Type::MonthNameFull:
-						d.month = monthFromName( r.cap(i++), m_eLanguage, QLocale::LongFormat );
+						d.month = cal.monthNumberByName( r.cap(i++) );
 						break;
 					case Node::Type::Year:
 					case Node::Type::YearLong:
@@ -433,11 +314,13 @@ namespace PCore
 
 
 		//! toString
-		QString DateParser::toString( int _year, int _month, int _day )
+		QString DateParser::toString( int _year, int _month,
+											int _day, int _day_of_week )
 		{
 			if ( m_Nodes.size() == 0 ) return nullptr;
 
 			QString str;
+			Locale::Calendar cal = get_calendar( m_eCountry, m_eLanguage );
 
 			for ( Node it : m_Nodes )
 			{
@@ -463,10 +346,10 @@ namespace PCore
 					str.append( QString::number( _month ) );
 					break;
 				case Node::Type::MonthNameAbbreviated:
-					str.append( monthName( _month, false, m_eLanguage, m_eCountry ) );
+					str.append( cal.monthNameShortNative( _month ) );
 					break;
 				case Node::Type::MonthNameFull:
-					str.append( monthName( _month, true, m_eLanguage, m_eCountry ) );
+					str.append( cal.monthNameNative( _month ) );
 					break;
 				case Node::Type::Day:
 					str.append( QString::number( _day ) );
@@ -479,10 +362,10 @@ namespace PCore
 					str.append( QString::number( _day ) );
 					break;
 				case Node::Type::DayNameAbbreviated:
-					str.append( dayName( _day, false, m_eLanguage, m_eCountry ) );
+					str.append( cal.dayNameShortNative( _day_of_week ) );
 					break;
 				case Node::Type::DayNameFull:
-					str.append( dayName( _day, true, m_eLanguage, m_eCountry ) );
+					str.append( cal.dayNameNative( _day_of_week ) );
 					break;
 
 				} // switch

@@ -213,6 +213,13 @@ namespace PCore
 			m_eType = _type;
 		}
 
+
+		//! constructor
+		Locale::Calendar::Calendar()
+		{
+
+		}
+
 		//! getName
 		QString Locale::Calendar::getName( void ) const
 		{

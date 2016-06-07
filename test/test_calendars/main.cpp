@@ -23,8 +23,6 @@ int main()
 	// Persian Calendar
 	//=====================================
 
-
-
 	qDebug() << PersianCalendar::fromString( "یکشنبه 12 مرداد 1396",
 													"DDDD DD MMMM yyyy" );
 	qDebug() << PersianCalendar( 1395, 11, 2 ).toString( "yy-MM-DD" );

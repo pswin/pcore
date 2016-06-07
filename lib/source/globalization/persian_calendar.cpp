@@ -10,6 +10,7 @@
 
 #include "include/pcore/globalization/persian_calendar.h"
 #include "include/pcore/globalization/date_parser.h"
+#include "include/pcore/globalization/locale.h"
 #include <QDate>
 #include <QString>
 #include <QDataStream>
@@ -42,38 +43,6 @@ const int day_per_month_leap[] = {	31, 31, 31,
 									31, 31, 31,
 									30, 30, 30,
 									30, 30, 30 };
-
-
-const char16_t* months_name[] = { u"فروردین",
-								  u"اردیبهشت",
-								  u"خرداد",
-								  u"تیر",
-								  u"مرداد",
-								  u"شهریور",
-								  u"مهر",
-								  u"آبان",
-								  u"آذر",
-								  u"دی",
-								  u"بهمن",
-								  u"اسفند"};
-
-
-const char16_t* days_name[] = { u"شنبه",
-							   u"یکشنبه",
-							   u"دوشنبه",
-							   u"سه شنبه",
-							   u"چهارشنبه",
-							   u"پنج شنبه",
-							   u"جمعه" };
-
-const char16_t* days_name_short[] = { u"ش",
-							   u"ی",
-							   u"د",
-							   u"س",
-							   u"چ",
-							   u"پ",
-							   u"ج" };
-
 
 
 //==============================================================================
@@ -300,7 +269,7 @@ namespace PCore
 			DateParser d;
 			d.setLocale( QLocale::Persian, QLocale::Iran );
 			d.setFormat( _format );
-			return d.toString( m_iYear, m_iMonth, m_iDay );
+			return d.toString( m_iYear, m_iMonth, m_iDay, dayOfWeek() );
 		}
 
 
@@ -572,33 +541,32 @@ namespace PCore
 		//! longDayName
 		QString PersianCalendar::longDayName( int _day )
 		{
-			if ( (_day > 7) || (_day < 1) ) return nullptr;
-			return QString::fromUtf16( days_name[_day-1] );
+			return Locale::Calendar(Locale::Calendar::Type::PersianIran)
+					.dayNameNative( _day );
 		}
 
 
 		//! longMonthName
 		QString PersianCalendar::longMonthName( int _month )
 		{
-			if ( ( _month > 12) || ( _month < 1) ) return nullptr;
-			return QString::fromUtf16( months_name[_month-1] );
+			return Locale::Calendar(Locale::Calendar::Type::PersianIran)
+					.monthNameNative( _month );
 		}
 
 
 		//! shortDayName
-		QString PersianCalendar::shortDayName(int _day)
+		QString PersianCalendar::shortDayName( int _day )
 		{
-			if ( (_day > 7) || (_day < 1) ) return nullptr;
-			return QString::fromUtf16( days_name_short[_day-1] );
+			return Locale::Calendar(Locale::Calendar::Type::PersianIran)
+					.dayNameShortNative( _day );
 		}
 
 
 		//! shortMonthName
 		QString PersianCalendar::shortMonthName(int _month)
 		{
-			// TODO:
-			if ( ( _month > 12) || ( _month < 1) ) return nullptr;
-			return QString::fromUtf16( months_name[_month-1] );
+			return Locale::Calendar(Locale::Calendar::Type::PersianIran)
+					.monthNameShortNative( _month );
 		}
 
 

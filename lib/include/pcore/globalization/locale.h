@@ -153,6 +153,13 @@ namespace PCore
 
 
 				/*!
+				 * \brief Constructs a calendar object by specified type.
+				 * \param _type
+				 */
+				explicit Calendar( );
+
+
+				/*!
 				 * \brief Returns name of the country
 				 */
 				QString getName( void ) const;
@@ -263,8 +270,16 @@ namespace PCore
 				Type getType( void ) const { return m_eType; }
 				Type type( void ) const { return m_eType; }
 
+
+				/*!
+				 * \brief Sets calendar type.
+				 */
+				void setType( Calendar::Type _type ){ m_eType = _type; }
+
+
 			private:
-				Type	m_eType; //! Type of the calendar
+				//! Type of the calendar
+				Calendar::Type	m_eType = Type::Invalid;
 
 			}; // calendar
 
