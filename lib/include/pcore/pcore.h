@@ -43,4 +43,11 @@
 #include "globalization/hijri_calendar.h"
 
 
+//=====================================
+// cryptography
+//=====================================
+
+#include "cryptography/rsa.h"
+
+
 #endif // _PCORE_H

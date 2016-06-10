@@ -74,7 +74,9 @@ SOURCES += \
     source/globalization/persian_calendar.cpp \
     source/globalization/date_parser.cpp \
     source/globalization/locale.cpp \
-    source/globalization/hijri_calendar.cpp
+    source/globalization/hijri_calendar.cpp \
+    source/cryptography/rsa.cpp \
+    source/cryptography/cryptography_engine.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -109,7 +111,9 @@ HEADERS +=\
     include/pcore/globalization/date_parser.h \
     headers/globalization/info_structs.h \
     include/pcore/globalization/locale.h \
-    include/pcore/globalization/hijri_calendar.h
+    include/pcore/globalization/hijri_calendar.h \
+    include/pcore/cryptography/rsa.h \
+    headers/cryptography/cryptography_engine.h
 
 
 

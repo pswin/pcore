@@ -11,6 +11,7 @@
 #include <QDate>
 
 using namespace PCore::core;
+using namespace PCore::cryptography;
 
 
 void print_hex( const void* pv, size_t len )
@@ -95,6 +96,26 @@ int main()
 	// decrypt
 	out = Crypto::desDecrypt( out, key );
 	printf( "Decrypted: %s\n\n", out.data() );
+
+
+
+	//=====================================
+	// RSA
+	//=====================================
+
+	printf("\n=====================================\n");
+	printf("RSA\n");
+	printf("=====================================\n");
+
+	Rsa rsa;
+
+	out = rsa.encrypt( "Merheba donya!" );
+	printf( "Encrypted: " );
+	print_hex( out.data(), out.size() );
+	printf( "\n" );
+
+	out = rsa.decrypt( out );
+	qDebug() << "Encrypted: " << out;
 
 	return 0;
 }

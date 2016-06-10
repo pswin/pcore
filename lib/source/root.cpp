@@ -8,6 +8,7 @@
 #include "include/pcore/globals.h"
 #include "include/pcore/core/logger.h"
 #include "include/pcore/core/profiler.h"
+#include "headers/cryptography/cryptography_engine.h"
 #include <QSettings>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
@@ -33,6 +34,12 @@ namespace PCore
 
 		PCORE_LOG_TRACE( "Root::init called." );
 
+
+		if ( PCore::cryptography::CryptographyEngine::init() == false )
+		{
+			PCORE_LOG_ERROR( "Initializing cryptography engine failed." );
+		}
+
 		// creating an instance of profile manager
 		pProfileManager = new PCore::core::ProfileManager( this );
 
@@ -40,6 +47,19 @@ namespace PCore
 		PCORE_LOG_INFO( "PCore started successfully." );
 		return true;
 	}
+
+
+	//! shutdown
+	bool Root::shutdown()
+	{
+		if ( PCore::cryptography::CryptographyEngine::shutdown() == false )
+		{
+			PCORE_LOG_ERROR( "Shutdowning cryptography engine failed." );
+		}
+
+		return true;
+	}
+
 
 	//! getVersionString
 	QString Root::getVersionString() const

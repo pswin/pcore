@@ -56,6 +56,13 @@ namespace PCore
 								= PCORE_CONFIG_DEFAULT_SETTING_FILE );
 
 
+		/*!
+		 * \brief Shutdowns PCore and release resources
+		 * \return Returns true if procedure was successful.
+		 */
+		bool shutdown( void );
+
+
 		#if QT_VERSION >= QT_VERSION_CHECK(5,6,0)
 			/*!
 			 * \brief Returns version number of PCore.
