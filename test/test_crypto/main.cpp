@@ -44,36 +44,19 @@ int main()
 	printf("AES\n");
 	printf("=====================================\n");
 
-	QByteArray ivec;
-	QByteArray key;
-	key.fill( '1', 32 ); // Key at least must be 32 char for AES-256
-	QByteArray data = "Hello world!";
+
+	AES aes;
+	aes.setPass( "123" );
 
 	// encrypt
-	auto out = Crypto::aesEncrypt( data, key, &ivec );
-	printf( "IV: " );
-	print_hex( ivec.data(), ivec.size() );
+	auto out = aes.encrypt( "Hello world!" );
 	printf( "Encrypted: " );
 	print_hex( out.data(), out.size() );
+	printf( "IV:        " );
+	print_hex( aes.getIV(), aes.getIV().size() );
 
 	// decrypt
-	out = Crypto::aesDecrypt( out, key, &ivec );
-	printf( "Decrypted: %s\n\n", out.data() );
-
-
-	//=====================================
-	// AES with default IVEC
-	//=====================================
-
-	data = "Salam donya!";
-
-	// encrypt
-	out = Crypto::aesEncrypt( data, key );
-	printf( "Encrypted: " );
-	print_hex( out.data(), out.size() );
-
-	// decrypt
-	out = Crypto::aesDecrypt( out, key );
+	out = aes.decrypt( out );
 	printf( "Decrypted: %s\n\n", out.data() );
 
 
@@ -86,15 +69,17 @@ int main()
 	printf("=====================================\n");
 
 
-	key = "password"; // key must be at least 8 char for DES
-	data = "Hallo welt!";
+	DES des;
+	des.setPass( "password" ); // key must be at least 8 char for DES
 
-	out = Crypto::desEncrypt( data, key );
+	out = des.encrypt( "Hallo welt!" );
 	printf( "Encrypted: " );
 	print_hex( out.data(), out.size() );
+	printf( "IV:        " );
+	print_hex( des.getIV(), des.getIV().size() );
 
 	// decrypt
-	out = Crypto::desDecrypt( out, key );
+	out = des.decrypt( out );
 	printf( "Decrypted: %s\n\n", out.data() );
 
 
@@ -109,7 +94,7 @@ int main()
 
 	Rsa rsa;
 
-	out = rsa.encrypt( "Merheba donya!" );
+	out = rsa.encrypt( "Salam donya!" );
 	printf( "Encrypted: " );
 	print_hex( out.data(), out.size() );
 	printf( "\n" );

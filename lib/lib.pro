@@ -58,7 +58,6 @@ SOURCES += \
     source/core/globals.cpp \
     source/core/logger.cpp \
     source/root.cpp \
-    source/core/crypto.cpp \
     source/core/logger/logger_file.cpp \
     source/core/logger/logger_qdebug.cpp \
     source/core/profiler.cpp \
@@ -76,7 +75,10 @@ SOURCES += \
     source/globalization/locale.cpp \
     source/globalization/hijri_calendar.cpp \
     source/cryptography/rsa.cpp \
-    source/cryptography/cryptography_engine.cpp
+    source/cryptography/cryptography_engine.cpp \
+    source/math/random.cpp \
+    source/cryptography/aes.cpp \
+    source/cryptography/des.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -92,7 +94,6 @@ HEADERS +=\
     include/pcore/core/logger.h \
     include/pcore/globals.h \
     include/pcore/root.h \
-    include/pcore/core/crypto.h \
     include/pcore/core/profiler.h \
     headers/core/logger/logger_network.h \
     headers/core/logger/logger_dummy.h \
@@ -113,7 +114,10 @@ HEADERS +=\
     include/pcore/globalization/locale.h \
     include/pcore/globalization/hijri_calendar.h \
     include/pcore/cryptography/rsa.h \
-    headers/cryptography/cryptography_engine.h
+    headers/cryptography/cryptography_engine.h \
+    include/pcore/cryptography/aes.h \
+    include/pcore/math/random.h \
+    include/pcore/cryptography/des.h
 
 
 
