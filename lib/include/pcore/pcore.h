@@ -30,6 +30,7 @@
 #include "core/exception.h"
 #include "core/compressor.h"
 #include "core/system_information.h"
+#include "core/hr.h"
 
 
 //=====================================

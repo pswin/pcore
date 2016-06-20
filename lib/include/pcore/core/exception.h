@@ -8,6 +8,7 @@
 #define _PCORE_EXCEPTION_H
 
 #include "../pcore_def.h"
+#include "../config.h"
 
 #if PCORE_CONFIG_THROW_ERROR == PCORE_ENABLE
 	#define PCORE_THROW_EXCEPTION( __type, __desc ) throw ( __type(__desc) );

@@ -457,9 +457,9 @@ namespace PCore
 			quint16 index = 0;
 			while ( wmi.nextItem() == true )
 			{
-				int max_clock		= wmi.getInt( "MaxClockSpeed" ) * 1000;
-				int min_clock		= wmi.getInt( "MinClockSpeed" ) * 1000;
-				int current_clock	= wmi.getInt( "CurrentClockSpeed" ) * 1000;
+				int max_clock		= wmi.getInt( "MaxClockSpeed" ) * PCORE_1MHZ;
+				int min_clock		= wmi.getInt( "MinClockSpeed" ) * PCORE_1MHZ;
+				int current_clock	= wmi.getInt( "CurrentClockSpeed" ) * PCORE_1MHZ;
 				int l1_cache_size	= 0;
 				int l2_cache_size	= wmi.getInt( "L2CacheSize" ) * 1024;
 				int l3_cache_size	= wmi.getInt( "L3CacheSize" ) * 1024;

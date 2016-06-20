@@ -14,16 +14,18 @@ using namespace PCore::core;
 using namespace PCore::cryptography;
 
 
-void print_hex( const void* pv, size_t len )
+void print_hex( const QByteArray& _ar )
 {
-	const unsigned char * p = (const unsigned char*)pv;
-	if (NULL == pv)
+	const unsigned char * p = (const unsigned char*)_ar.constData();
+
+	if ( _ar.isNull() == true )
+	{
 		printf("NULL");
+	}
 	else
 	{
-		size_t i = 0;
-		for (; i<len;++i)
-			printf("%02X ", *p++);
+		for (int i = 0; i < _ar.size(); ++i )
+			printf( "%02X ", *p++ );
 	}
 	printf("\n");
 }
@@ -51,9 +53,9 @@ int main()
 	// encrypt
 	auto out = aes.encrypt( "Hello world!" );
 	printf( "Encrypted: " );
-	print_hex( out.data(), out.size() );
+	print_hex( out );
 	printf( "IV:        " );
-	print_hex( aes.getIV(), aes.getIV().size() );
+	print_hex( aes.getIV() );
 
 	// decrypt
 	out = aes.decrypt( out );
@@ -74,9 +76,9 @@ int main()
 
 	out = des.encrypt( "Hallo welt!" );
 	printf( "Encrypted: " );
-	print_hex( out.data(), out.size() );
+	print_hex( out.data() );
 	printf( "IV:        " );
-	print_hex( des.getIV(), des.getIV().size() );
+	print_hex( des.getIV() );
 
 	// decrypt
 	out = des.decrypt( out );
@@ -96,7 +98,7 @@ int main()
 
 	out = rsa.encrypt( "Salam donya!" );
 	printf( "Encrypted: " );
-	print_hex( out.data(), out.size() );
+	print_hex( out.data() );
 	printf( "\n" );
 
 	out = rsa.decrypt( out );

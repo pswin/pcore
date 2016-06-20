@@ -44,31 +44,13 @@
 
 
 #define TABLE_INSERT_ROW_HR(__table, __index, _property, __value) \
-			TABLE_INSERT_ROW( __table, __index, _property, human_read(__value) );
+			TABLE_INSERT_ROW( __table, __index, _property, \
+			PCore::core::HumanReadable::byteToString(__value) );
 
+#define TABLE_INSERT_ROW_HR_FREQ(__table, __index, _property, __value) \
+			TABLE_INSERT_ROW( __table, __index, _property, \
+			PCore::core::HumanReadable::freqToString(__value) );
 
-//==============================================================================
-// Functions
-//==============================================================================
-
-
-/*!
- * \brief Converts sizes to human readable sizes.
- * \param _val: Size in byte.
- */
-QString human_read( quint64 _val )
-{
-	if ( _val / PCORE_1TB >= 1 )
-		return QString::number( _val / (double)PCORE_1TB, 'f', 2 ) + " TB";
-	else if ( _val / PCORE_1GB >= 1 )
-		return QString::number( _val / (double)PCORE_1GB, 'f', 2 ) + " GB";
-	else if ( _val / PCORE_1MB >= 1 )
-		return QString::number( _val / (double)PCORE_1MB, 'f', 2 ) + " MB";
-	else if ( _val / PCORE_1KB >= 1 )
-		return QString::number( _val / (double)PCORE_1KB, 'f', 2 ) + " KB";
-	else
-		return QString::number(_val);
-}
 
 //==============================================================================
 // MainWindow
@@ -127,9 +109,9 @@ void MainWindow::fillProcessTable( void )
 		TABLE_INSERT_ROW( ui->tbl_processor, row, "Model", it.model );
 		TABLE_INSERT_ROW( ui->tbl_processor, row, "Vendor", it.vendor );
 		TABLE_INSERT_ROW( ui->tbl_processor, row, "Architecture", it.arch_name );
-		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Max clock", it.cores[0].freq.max );
-		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Min clock", it.cores[0].freq.min );
-		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Current clock", it.cores[0].freq.current );
+		TABLE_INSERT_ROW_HR_FREQ( ui->tbl_processor, row, "Max clock", it.cores[0].freq.max );
+		TABLE_INSERT_ROW_HR_FREQ( ui->tbl_processor, row, "Min clock", it.cores[0].freq.min );
+		TABLE_INSERT_ROW_HR_FREQ( ui->tbl_processor, row, "Current clock", it.cores[0].freq.current );
 		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Total cores", it.total_cores );
 		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Logical cores", it.logical_cores );
 		TABLE_INSERT_ROW_NUM( ui->tbl_processor, row, "Threads", it.threads );

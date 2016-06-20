@@ -63,6 +63,15 @@
 #define PCORE_CONFIG_THROW_ERROR PCORE_DISABLE
 
 
+
+/* Locale and language:
+ * Default locale and language which is used by the PCore
+ */
+
+#define PCORE_CONFIG_DEFAULT_LANGUAGE	QLocale::English
+#define PCORE_CONFIG_DEFAULT_COUNTRY	QLocale::UnitedStates
+
+
 /*=====================================
 	Logger
 =====================================*/

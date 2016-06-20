@@ -29,4 +29,15 @@
 #define PCORE_1GB	( 0x40000000 )
 #define PCORE_1TB	( 0x10000000000 )
 
+
+//=======================================
+// Frequance
+//=======================================
+
+#define PCORE_1HZ	( 1 )
+#define PCORE_1KHZ	( 1000 )
+#define PCORE_1MHZ	( 1000000 )
+#define PCORE_1GHZ	( 1000000000 )
+#define PCORE_1THZ	( 1000000000000 )
+
 #endif // _PCORE_CONST_H

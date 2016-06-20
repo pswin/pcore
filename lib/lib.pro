@@ -78,7 +78,8 @@ SOURCES += \
     source/cryptography/cryptography_engine.cpp \
     source/math/random.cpp \
     source/cryptography/aes.cpp \
-    source/cryptography/des.cpp
+    source/cryptography/des.cpp \
+    source/core/hr.cpp
 
 HEADERS +=\
     include/pcore/pcore.h \
@@ -117,7 +118,8 @@ HEADERS +=\
     headers/cryptography/cryptography_engine.h \
     include/pcore/cryptography/aes.h \
     include/pcore/math/random.h \
-    include/pcore/cryptography/des.h
+    include/pcore/cryptography/des.h \
+    include/pcore/core/hr.h
 
 
 
@@ -189,4 +191,6 @@ win32: LIBS+= -lwbemuuid -lcomsupp
 unix: {
     LIBS += -ludev
 }
+
+RESOURCES +=
 
