@@ -8,6 +8,7 @@
 #define _PCORE_CRYPTO_AES_H
 
 #include "../pcore_def.h"
+#include "../globals.h"
 #include <QObject>
 
 namespace PCore
@@ -140,8 +141,8 @@ namespace PCore
 			 */
 			static QByteArray encryptEX( const QByteArray& _pass,
 										 const QByteArray& _data,
-										 QByteArray& _iv		 = QByteArray(),
-										 QByteArray& _salt		 = QByteArray(),
+										 QByteArray& _iv		 = NullQByteArray,
+										 QByteArray& _salt		 = NullQByteArray,
 										 BlockSize _block_size	 = BlockSize::_128,
 										 bool _attach_salt = true
 										);
@@ -157,8 +158,8 @@ namespace PCore
 			 */
 			static QByteArray decryptEX( const QByteArray& _pass,
 										 const QByteArray& _data,
-										 QByteArray& _iv		 = QByteArray(),
-										 const QByteArray& _salt = QByteArray(),
+										 QByteArray& _iv		 = NullQByteArray,
+										 const QByteArray& _salt = NullQByteArray,
 										 BlockSize _block_size	 = BlockSize::_128
 										);
 

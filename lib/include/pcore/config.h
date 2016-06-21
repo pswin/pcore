@@ -72,6 +72,12 @@
 #define PCORE_CONFIG_DEFAULT_COUNTRY	QLocale::UnitedStates
 
 
+/* Default cache size:
+ * This is value specifies default value for maximum cache size.
+ */
+#define PCORE_CONFIG_DEFAULT_CACHE_SIZE	PCORE_1MB
+
+
 /*=====================================
 	Logger
 =====================================*/

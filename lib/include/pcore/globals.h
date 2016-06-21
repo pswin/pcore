@@ -33,12 +33,23 @@ namespace PCore
 	class Root;
 } // PCore
 
+class QByteArray;
 
+
+//=====================================
+// Global variables
+//=====================================
 
 PCORE_EXTERN( PCore::core::Logger*, pLogger )
 PCORE_EXTERN( PCore::core::ProfileManager*, pProfileManager )
 PCORE_EXTERN( PCore::Root*, pRoot )
 
+
+//=====================================
+// static variables
+//=====================================
+
+PCORE_EXTERN( QByteArray, NullQByteArray )
 
 #endif // _PCORE_GLOBALS
 

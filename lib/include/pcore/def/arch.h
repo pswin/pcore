@@ -50,7 +50,6 @@
 			#define PCORE_ARCH PCORE_ARCH_I386
 			#define PCORE_ARCH_WORD_SIZE	32
 			#define PCORE_ARCH_FAMILY PCORE_ARCH_FAMILY_X86
-			#define
 	#elif  defined ( __amd64__ ) || defined ( __amd64 ) || defined ( __x86_64__ )  ||\
 		defined ( __x86_64 ) || defined ( _M_X64 ) || defined ( _M_AMD64 ) || \
 		defined ( _M_IA64 ) || defined ( __ia64__ ) || defined ( _IA64 )  || \
