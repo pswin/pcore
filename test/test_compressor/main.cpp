@@ -4,9 +4,7 @@
 //#	author:	Pouya Shahinfar (Pswin) - pswinpo@gmail.com
 //##############################################################################
 
-/* Note:
- *    For executing this sample you need to copy lore.txt to bin directory.
- */
+
 
 #include <pcore/pcore.h>
 #include <QDebug>
@@ -18,20 +16,22 @@ using namespace PCore::core;
 int main()
 {
 
+	/* Note:
+	 *  For executing this sample you need to copy lore.txt from directory of
+	 *  sample to the bin directory.
+	 */
+
 	// initializing PCore
 	PCORE_INIT();
 
 
-	//=====================================
-	// MD5
-	//=====================================
 
 
-	// read from file
+	// reading from file
 	QFile f( "lore.txt" );
 	if ( f.open( QFile::ReadOnly ) == false )
 	{
-		PCORE_LOG_ERROR( "Can not open 'lore.txt'" );
+		PCORE_LOG_ERROR( "Cannot open 'lore.txt'" );
 		return -1;
 	}
 	QByteArray ar = f.readAll();
@@ -50,9 +50,9 @@ int main()
 											   );
 
 
-	qDebug()<< "Original size:" << ar.size();
-	qDebug()<< "Defalte:" << res_deflate.size();
-	qDebug()<< "GZip:" << res_gzip.size();
+	qDebug()<< "Original size:         " << ar.size();
+	qDebug()<< "Compresed with Defalte:" << res_deflate.size();
+	qDebug()<< "Compresed with GZip:   " << res_gzip.size();
 
 
 	return 0;

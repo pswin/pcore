@@ -35,8 +35,7 @@ int main()
 			 << PersianCalendar( 1395, 11, 2 ).toString( "MM-DD-yy" );
 
 	/*
-	 * Start day for the Persian calendar is 22nd March 622 A.D in
-	 * Gregorian Calendar.
+	 * Start day of Persian calendar is 22nd March 622 A.D in Gregorian calendar.
 	 */
 	qDebug() << "Start Date:         "
 			 << PersianCalendar::fromQDate( QDate( 622,3,22 ) )
@@ -65,8 +64,8 @@ int main()
 
 
 	/*
-	 * Start day for the Hijri Calendar is 19 June 622 A.D in Gregorian
-	 * Calendar or 16 June 622 A.D in Julian Calander.
+	 * Start day of Hijri Calendar is 19th June 622 A.D in Gregorian
+	 * calendar or 16th June 622 A.D in Julian Calander.
 	*/
 	qDebug() << "Start Date:         "
 			 << HijriCalendar::fromQDate( QDate( 622,7,19 ) )

@@ -107,7 +107,6 @@ HEADERS +=\
     include/pcore/core/bit_operations.h \
     headers/core/arch/intel/sys_info/sys_info_intel.h \
     headers/core/arch/amd/sys_info/sys_info_amd.h \
-    source/core/system_info/sys_info_global.h \
     headers/core/linux/udev.h \
     include/pcore/globalization/persian_calendar.h \
     include/pcore/globalization/date_parser.h \

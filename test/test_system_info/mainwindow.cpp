@@ -171,8 +171,8 @@ void MainWindow::fillVideoControllerTable()
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Max Refresh rate", it.max_refresh_rate );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Min Refresh rate", it.min_refresh_rate );
 		TABLE_INSERT_ROW( ui->tlb_video, row_index, "Video Mode", it.video_mode_desc );
-		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current Reolution Ver", it.current_resolution_vertical );
-		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current Reolution Hor", it.current_resolution_horizantal );
+		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current resolution Ver", it.current_resolution_vertical );
+		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current resolution Hor", it.current_resolution_horizantal );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current Num of Colors", it.current_num_of_colors );
 		TABLE_INSERT_ROW_NUM( ui->tlb_video, row_index, "Current Bits per pixel", it.current_bits_per_pixel );
 		TABLE_INSERT_ROW( ui->tlb_video, row_index, "Is running", it.is_running? "True": "False" );

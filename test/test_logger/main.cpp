@@ -7,6 +7,8 @@
 #include <pcore/pcore.h>
 #include <qdebug.h>
 
+using namespace PCore::core;
+
 int main()
 {
 
@@ -39,16 +41,16 @@ int main()
 	//=====================================
 
 	/*
-	 * if you create a log message without using logging macros,
-	 * you can send additional parameters to it.
+	 * if you intend to send additional parameters with you log message, you
+	 * should create LogMessage manually.
 	 */
 
 	// creating log message
-	PLogMessage msg;
+	LogMessage msg;
 	msg.setMessage( "This is a custom message" );
 	msg.setParam( "param 1", 12 );
 	msg.setParam( "param 2", "hi" );
-	msg.setType( PLogMessage::Type::Error );
+	msg.setType( LogMessage::Type::Error );
 
 	// loging it
 	pLogger->log( msg );
@@ -58,7 +60,7 @@ int main()
 	// getting logger information
 	//=====================================
 
-	auto logger = pLogger->getLogger( PLogMessage::Type::Error );
+	auto logger = pLogger->getLogger( LogMessage::Type::Error );
 
 	qDebug() << "Type:" << logger->property( "type" );
 	qDebug() << "Filename:" << logger->property( "filename" );
