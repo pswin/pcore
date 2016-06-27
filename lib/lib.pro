@@ -118,7 +118,8 @@ HEADERS +=\
     include/pcore/cryptography/aes.h \
     include/pcore/math/random.h \
     include/pcore/cryptography/des.h \
-    include/pcore/core/hr.h
+    include/pcore/core/hr.h \
+    include/pcore/core/cachefx/lru_cache.h
 
 
 

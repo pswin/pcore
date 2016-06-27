@@ -72,10 +72,20 @@
 #define PCORE_CONFIG_DEFAULT_COUNTRY	QLocale::UnitedStates
 
 
+/*=====================================
+	Cache Frameword
+=====================================*/
+
+
 /* Default cache size:
  * This is value specifies default value for maximum cache size.
  */
 #define PCORE_CONFIG_DEFAULT_CACHE_SIZE	PCORE_1MB
+
+
+/* This macro controls emission of signals in the cache class.
+ */
+#define PCORE_CONFIG_CACHE_EMIT_SIGNAL PCORE_DISABLE;
 
 
 /*=====================================
