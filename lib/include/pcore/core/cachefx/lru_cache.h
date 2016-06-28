@@ -155,7 +155,6 @@ namespace PCore
 					// create free space for the new item
 					if ( (_cost + m_uUsedCost) > m_uMaxCost )
 					{
-						qDebug() << "111";
 						trim( _cost );
 					}
 
