@@ -23,7 +23,7 @@
 #include <QDebug>
 
 //==============================================================================
-// class's interface
+// code
 //==============================================================================
 
 namespace PCore
@@ -80,8 +80,6 @@ namespace PCore
 				explicit LRUCache(cost_t _max_cost = PCORE_CONFIG_DEFAULT_CACHE_SIZE )
 				{
 					m_uMaxCost = _max_cost;
-					m_Lock.lockForRead();
-					m_Lock.unlock();
 				}
 
 
@@ -237,14 +235,18 @@ namespace PCore
 				bool isEmpty( void )
 				{
 					QReadLocker lock( &m_Lock );
-					return m_Items.size();
+					return m_Items.size() == 0;
 				}
 
 
 				/*!
 				 * \brief Returns the number of the cached items.
 				 */
-				int size( void );
+				int size( void )
+				{
+					QReadLocker lock( &m_Lock );
+					return m_Items.size();
+				}
 
 
 				/*!
